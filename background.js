@@ -628,39 +628,79 @@ function drawLamp(t_lamp) {
   //I made the lamp by myself with a lamp reference from google -> https://www.shutterstock.com/search/street-lamp-drawing
   //Same like the tree, I duplicated a lot of times
 
-  for (var i = 0; i < lamps.length; i++) {
-    push();
-    fill(35);
-    beginShape();
-    vertex(t_lamp[i].x, t_lamp[i].y);
-    vertex(t_lamp[i].x + 5, t_lamp[i].y - 25);
-    vertex(t_lamp[i].x + 30, t_lamp[i].y - 25);
-    vertex(t_lamp[i].x + 35, t_lamp[i].y);
-    endShape();
-    rect(t_lamp[i].x + 12, t_lamp[i].y - 100, 10, 80);
-    rect(t_lamp[i].x + 2, t_lamp[i].y - 100, 30, 5);
-    rect(t_lamp[i].x - 3, t_lamp[i].y - 103, 40, 5);
-    beginShape();
-    vertex(t_lamp[i].x + 5, t_lamp[i].y - 103);
-    vertex(t_lamp[i].x + 3, t_lamp[i].y - 130);
-    vertex(t_lamp[i].x + 33, t_lamp[i].y - 130);
-    vertex(t_lamp[i].x + 29, t_lamp[i].y - 103);
-    endShape();
+  var l = {
+    x: -660,
+    y: 480,
+    draw: function () {
+      push();
+      fill(35);
+      beginShape();
+      vertex(this.x, this.y);
+      vertex(this.x + 5, this.y - 25);
+      vertex(this.x + 30, this.y - 25);
+      vertex(this.x + 35, this.y);
+      endShape();
+      rect(this.x + 12, this.y - 100, 10, 80);
+      rect(this.x + 2, this.y - 100, 30, 5);
+      rect(this.x - 3, this.y - 103, 40, 5);
+      beginShape();
+      vertex(this.x + 5, this.y - 103);
+      vertex(this.x + 3, this.y - 130);
+      vertex(this.x + 33, this.y - 130);
+      vertex(this.x + 29, this.y - 103);
+      endShape();
 
-    //lamp
-    fill(255, 215, 0);
-    beginShape();
-    vertex(t_lamp[i].x + 8, t_lamp[i].y - 125);
-    vertex(t_lamp[i].x + 27, t_lamp[i].y - 125);
-    vertex(t_lamp[i].x + 25, t_lamp[i].y - 108);
-    vertex(t_lamp[i].x + 10, t_lamp[i].y - 108);
-    endShape();
-    fill(35);
-    rect(t_lamp[i].x - 3, t_lamp[i].y - 130, 40, 5);
-    rect(t_lamp[i].x + 2, t_lamp[i].y - 133, 30, 5);
-    ellipse(t_lamp[i].x + 16, t_lamp[i].y - 134, 10);
-    pop();
-  }
+      //lamp
+      fill(255, 215, 0);
+      beginShape();
+      vertex(this.x + 8, this.y - 125);
+      vertex(this.x + 27, this.y - 125);
+      vertex(this.x + 25, this.y - 108);
+      vertex(this.x + 10, this.y - 108);
+      endShape();
+      fill(35);
+      rect(this.x - 3, this.y - 130, 40, 5);
+      rect(this.x + 2, this.y - 133, 30, 5);
+      ellipse(this.x + 16, this.y - 134, 10);
+      pop();
+    },
+  };
+
+  return l;
+
+  // for (var i = 0; i < lamps.length; i++) {
+  //   push();
+  //   fill(35);
+  //   beginShape();
+  //   vertex(t_lamp[i].x, t_lamp[i].y);
+  //   vertex(t_lamp[i].x + 5, t_lamp[i].y - 25);
+  //   vertex(t_lamp[i].x + 30, t_lamp[i].y - 25);
+  //   vertex(t_lamp[i].x + 35, t_lamp[i].y);
+  //   endShape();
+  //   rect(t_lamp[i].x + 12, t_lamp[i].y - 100, 10, 80);
+  //   rect(t_lamp[i].x + 2, t_lamp[i].y - 100, 30, 5);
+  //   rect(t_lamp[i].x - 3, t_lamp[i].y - 103, 40, 5);
+  //   beginShape();
+  //   vertex(t_lamp[i].x + 5, t_lamp[i].y - 103);
+  //   vertex(t_lamp[i].x + 3, t_lamp[i].y - 130);
+  //   vertex(t_lamp[i].x + 33, t_lamp[i].y - 130);
+  //   vertex(t_lamp[i].x + 29, t_lamp[i].y - 103);
+  //   endShape();
+
+  //   //lamp
+  //   fill(255, 215, 0);
+  //   beginShape();
+  //   vertex(t_lamp[i].x + 8, t_lamp[i].y - 125);
+  //   vertex(t_lamp[i].x + 27, t_lamp[i].y - 125);
+  //   vertex(t_lamp[i].x + 25, t_lamp[i].y - 108);
+  //   vertex(t_lamp[i].x + 10, t_lamp[i].y - 108);
+  //   endShape();
+  //   fill(35);
+  //   rect(t_lamp[i].x - 3, t_lamp[i].y - 130, 40, 5);
+  //   rect(t_lamp[i].x + 2, t_lamp[i].y - 133, 30, 5);
+  //   ellipse(t_lamp[i].x + 16, t_lamp[i].y - 134, 10);
+  //   pop();
+  // }
 }
 
 function drawCanyon(t_canyon) {
