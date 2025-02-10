@@ -133,7 +133,10 @@ function draw() {
   streetRoad();
 
   //-------- 4. LAMP ------------
-  drawLamp(lamps);
+  for (var i = 0; i < lamps.length; i++) {
+    lamps[i].draw();
+  }
+  // drawLamp(lamps);
 
   // -------- 5. TREE -----------
   drawTree(tree);

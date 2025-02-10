@@ -115,13 +115,18 @@ function backgroundSetup() {
   // ------------ LAMP ------------
   lamps = [];
 
-  for (var i = 0; i < 50; i++) {
-    var lamp = {
-      x: -660 + i * 500,
-      y: 480,
-    };
+  for (var i = 0; i < 100; i++) {
+    lamp = drawLamp(-660 + i * 500, 480);
     lamps.push(lamp);
   }
+
+  // for (var i = 0; i < 50; i++) {
+  //   var lamp = {
+  //     x: -660 + i * 500,
+  //     y: 480,
+  //   };
+  //   lamps.push(lamp);
+  // }
 
   //------------ COIN BOARD ------------
   board = {
@@ -622,15 +627,15 @@ function drawMountain() {
   pop();
 }
 
-function drawLamp(t_lamp) {
+function drawLamp(x, y) {
   // ------------ LAMP ------------
 
   //I made the lamp by myself with a lamp reference from google -> https://www.shutterstock.com/search/street-lamp-drawing
   //Same like the tree, I duplicated a lot of times
 
   var l = {
-    x: -660,
-    y: 480,
+    x: x,
+    y: y,
     draw: function () {
       push();
       fill(35);
