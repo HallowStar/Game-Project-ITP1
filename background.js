@@ -2,10 +2,13 @@ function initialSetup() {
   gameChar_w = 10;
   gameChar_h = 20;
 
+  jumpPower = -10;
+
   police = {
     position: createVector(145, 560),
-    acceleration: 2,
+    acceleration: 3,
     jumpSpeed: 4,
+    jumpPower: -10,
     legDeg: 65,
     legDirection: -2,
   };
@@ -203,27 +206,71 @@ function backgroundSetup() {
   };
 }
 
+function Cloud(x, y, size) {
+  this.x = x;
+  this.y = y;
+  this.size = size;
+
+  this.draw = function () {
+    fill(255);
+    //STRUCTURE
+    ellipse(this.x - 10, this.y, this.size);
+    ellipse(this.x + 9, this.y + 15, this.size + 65, this.size + 10);
+
+    ellipse(this.x + 25, this.y - 1, this.size + 15);
+    ellipse(this.x - 10, this.y + 20, this.size);
+    ellipse(this.x + 30, this.y + 20, this.size);
+
+    push();
+    strokeWeight(2);
+    stroke(0);
+    noFill();
+
+    line(this.x - 65, this.y + 25, this.x - 80, this.y + 25);
+    line(this.x - 65, this.y + 35, this.x - 80, this.y + 35);
+    pop();
+  };
+
+  this.move = function () {
+    // this.x += 2;
+    //CLOUD LOOP
+    if (gameState == 1) {
+      if (this.x > 2000) {
+        this.x = -100;
+        this.y = random(20, 180);
+      } else {
+        this.x += 2;
+      }
+    }
+  };
+}
+
 function movingObject() {
   //------------ CLOUD ------------
 
   //Technique I used From the Coursera which are objects inside of an array
-  clouds = [
-    {
-      x: random(60, 90),
-      y: random(20, 70),
-      size: random(40, 60),
-    },
-    {
-      x: random(140, 190),
-      y: random(6, 130),
-      size: random(60, 80),
-    },
-    {
-      x: random(0, 80),
-      y: random(100, 180),
-      size: random(70, 90),
-    },
-  ];
+  // clouds = [
+  //   {
+  //     x: random(60, 90),
+  //     y: random(20, 70),
+  //     size: random(40, 60),
+  //   },
+  //   {
+  //     x: random(140, 190),
+  //     y: random(6, 130),
+  //     size: random(60, 80),
+  //   },
+  //   {
+  //     x: random(0, 80),
+  //     y: random(100, 180),
+  //     size: random(70, 90),
+  //   },
+  // ];
+  clouds = [];
+  for (var i = 0; i < 5; i++) {
+    var cloud = new Cloud(random(-100, 200), random(6, 200), random(40, 80));
+    clouds.push(cloud);
+  }
 
   //------------ LAVA BALL ------------
   lball = [
@@ -376,56 +423,62 @@ function streetRoad() {
 }
 
 function drawCloud() {
-  // ------------ CLOUD ------------
-
-  for (var i = 0; i < clouds.length; i++) {
-    fill(255);
-
-    let cloud = clouds[i];
-
-    //STRUCTURE
-    ellipse(cloud.x - 10, cloud.y, cloud.size);
-    ellipse(cloud.x + 9, cloud.y + 15, cloud.size + 65, cloud.size + 10);
-
-    ellipse(cloud.x + 25, cloud.y - 1, cloud.size + 15);
-    ellipse(cloud.x - 10, cloud.y + 20, cloud.size);
-    ellipse(cloud.x + 30, cloud.y + 20, cloud.size);
-
-    push();
-    strokeWeight(2);
-    stroke(0);
-    noFill();
-
-    line(cloud.x - 65, cloud.y + 25, cloud.x - 80, cloud.y + 25);
-    line(cloud.x - 65, cloud.y + 35, cloud.x - 80, cloud.y + 35);
-    pop();
-  }
-}
-
-function drawMovingCloud() {
-  // ------------ CLOUD ANIMATION
-
   for (var i = 0; i < clouds.length; i++) {
     var cloud = clouds[i];
-    if (gameState == 1) {
-      cloud.x += i + 2;
-    }
+    cloud.draw();
+    cloud.move();
 
-    //CLOUD RESET (if press new game it will set to default position)
+    // ------------ CLOUD ------------
 
-    // I improvised this so that when the game reset (gamestate = 0) it will go back to the normal position as if I refreshed the page
+    // for (var i = 0; i < clouds.length; i++) {
+    //   fill(255);
 
-    // if (gameState == 0) {
-    //   cloud.x = 200 - i * 50;
+    //   let cloud = clouds[i];
+
+    //   //STRUCTURE
+    //   ellipse(cloud.x - 10, cloud.y, cloud.size);
+    //   ellipse(cloud.x + 9, cloud.y + 15, cloud.size + 65, cloud.size + 10);
+
+    //   ellipse(cloud.x + 25, cloud.y - 1, cloud.size + 15);
+    //   ellipse(cloud.x - 10, cloud.y + 20, cloud.size);
+    //   ellipse(cloud.x + 30, cloud.y + 20, cloud.size);
+
+    //   push();
+    //   strokeWeight(2);
+    //   stroke(0);
+    //   noFill();
+
+    //   line(cloud.x - 65, cloud.y + 25, cloud.x - 80, cloud.y + 25);
+    //   line(cloud.x - 65, cloud.y + 35, cloud.x - 80, cloud.y + 35);
+    //   pop();
     // }
-
-    //CLOUD LOOP
-    if (cloud.x > 2000) {
-      cloud.x = -100;
-      cloud.y = random(20, 180);
-    }
   }
 }
+
+// function drawMovingCloud() {
+//   // ------------ CLOUD ANIMATION
+
+//   for (var i = 0; i < clouds.length; i++) {
+//     var cloud = clouds[i];
+//     if (gameState == 1) {
+//       cloud.x += i + 2;
+//     }
+
+//     //CLOUD RESET (if press new game it will set to default position)
+
+//     // I improvised this so that when the game reset (gamestate = 0) it will go back to the normal position as if I refreshed the page
+
+//     // if (gameState == 0) {
+//     //   cloud.x = 200 - i * 50;
+//     // }
+
+//     //CLOUD LOOP
+//     if (cloud.x > 2000) {
+//       cloud.x = -100;
+//       cloud.y = random(20, 180);
+//     }
+//   }
+// }
 
 function drawTree(x, y) {
   //------------ TREE ------------

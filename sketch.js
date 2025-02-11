@@ -24,6 +24,9 @@ let isRight;
 let isJump;
 let isFall;
 let scrollPos;
+let velocity;
+let gravity;
+let jumpPower;
 
 //background / item letiables
 let clouds;
@@ -158,7 +161,7 @@ function draw() {
   pop(); // end of translate
 
   // ------------------ 9. CLOUDS ------------------
-  drawMovingCloud();
+  // drawMovingCloud();
   drawCloud();
 
   // ------------------ 10. MOON ------------------
