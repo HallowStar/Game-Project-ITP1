@@ -143,7 +143,7 @@ function characterTurnLeft() {
   fill(255, 228, 196);
   ellipse(police.position.x, police.position.y - 55, gameChar_h + 10);
 
-  if (police.position.y >= 700) {
+  if (police.position.y == 560) {
     if (police.legDeg >= 55) {
       police.legDirection = -2;
     } else if (police.legDeg <= -55) {

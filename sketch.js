@@ -31,7 +31,7 @@ let moon;
 let building;
 let n_building;
 let f_building;
-let tree;
+let trees;
 let lamps;
 let board;
 let canyon;
@@ -136,10 +136,12 @@ function draw() {
   for (var i = 0; i < lamps.length; i++) {
     lamps[i].draw();
   }
-  // drawLamp(lamps);
 
   // -------- 5. TREE -----------
-  drawTree(tree);
+  for (var i = 0; i < trees.length; i++) {
+    trees[i].draw();
+  }
+  // drawTree(tree);
 
   // ------------------ 6. CANYON ------------------
   drawCanyon(canyon);

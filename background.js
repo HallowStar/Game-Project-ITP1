@@ -79,10 +79,13 @@ function backgroundSetup() {
   f_building_x = [170, 2500];
 
   //------------ TREE ------------
-  tree = {
-    x: 1030,
-    y: 475,
-  };
+
+  trees = [];
+
+  for (var j = -50; j < 50; j++) {
+    var tree = drawTree(1030 + j * 500, 475);
+    trees.push(tree);
+  }
 
   //------------ CANYON ------------
 
@@ -94,6 +97,7 @@ function backgroundSetup() {
   //     width: random(200, 300),
   //   };
   // }
+
   canyon = [
     {
       x: random(200, 500),
@@ -116,17 +120,9 @@ function backgroundSetup() {
   lamps = [];
 
   for (var i = 0; i < 100; i++) {
-    lamp = drawLamp(-660 + i * 500, 480);
+    var lamp = drawLamp(-660 + i * 500, 480);
     lamps.push(lamp);
   }
-
-  // for (var i = 0; i < 50; i++) {
-  //   var lamp = {
-  //     x: -660 + i * 500,
-  //     y: 480,
-  //   };
-  //   lamps.push(lamp);
-  // }
 
   //------------ COIN BOARD ------------
   board = {
@@ -431,109 +427,114 @@ function drawMovingCloud() {
   }
 }
 
-function drawTree(t_tree) {
+function drawTree(x, y) {
   //------------ TREE ------------
 
   //Using the loop method I learned from Coursera, I looped the trees a lot of times to make it as if there are infinite amount of trees
 
-  //DIRT
-  for (var j = -100; j < 100; j++) {
-    push();
-    stroke(0);
-    fill(160, 82, 45);
-    rect(t_tree.x + 15 + j * 500, t_tree.y + 1, 120, 10);
-    pop();
+  var t = {
+    x: x,
+    y: y,
+    draw: function () {
+      push();
+      stroke(0);
+      fill(160, 82, 45);
+      rect(this.x + 15, this.y + 1, 120, 10);
+      pop();
 
-    // ------------ ROCKS
-    for (var i = 0; i < 10; i++) {
+      // ------------ ROCKS
+      for (var i = 0; i < 10; i++) {
+        push();
+        noFill();
+        stroke(0);
+        rect(this.x + i * 15, this.y - 4, 15, 5);
+        pop();
+      }
+
       push();
       noFill();
       stroke(0);
-      rect(t_tree.x + i * 15 + j * 500, t_tree.y - 4, 15, 5);
+      rect(this.x, this.y + 1, 15, 5);
       pop();
-    }
 
-    push();
-    noFill();
-    stroke(0);
-    rect(t_tree.x + j * 500, t_tree.y + 1, 15, 5);
-    pop();
-
-    push();
-    noFill();
-    stroke(0);
-    rect(t_tree.x + j * 500, t_tree.y + 6, 15, 5);
-    pop();
-
-    push();
-    noFill();
-    stroke(0);
-    rect(t_tree.x + j * 500, t_tree.y + 11, 15, 5);
-    pop();
-
-    for (var i = 0; i < 10; i++) {
       push();
       noFill();
       stroke(0);
-      rect(t_tree.x + i * 15 + j * 500, t_tree.y + 11, 15, 5);
+      rect(this.x, this.y + 6, 15, 5);
       pop();
-    }
 
-    push();
-    noFill();
-    stroke(0);
-    rect(t_tree.x + 135 + j * 500, t_tree.y + 1, 15, 5);
-    pop();
+      push();
+      noFill();
+      stroke(0);
+      rect(this.x, this.y + 11, 15, 5);
+      pop();
 
-    push();
-    noFill();
-    stroke(0);
-    rect(t_tree.x + 135 + j * 500, t_tree.y + 6, 15, 5);
-    pop();
+      for (var i = 0; i < 10; i++) {
+        push();
+        noFill();
+        stroke(0);
+        rect(this.x + i * 15, this.y + 11, 15, 5);
+        pop();
+      }
 
-    push();
-    noFill();
-    stroke(0);
-    rect(t_tree.x + 135 + j * 500, t_tree.y + 11, 15, 5);
-    pop();
+      push();
+      noFill();
+      stroke(0);
+      rect(this.x + 135, this.y + 1, 15, 5);
+      pop();
 
-    //TREE STRUCTURE
+      push();
+      noFill();
+      stroke(0);
+      rect(this.x + 135, this.y + 6, 15, 5);
+      pop();
 
-    //STEM
-    push();
-    fill(110, 67, 0);
-    rect(t_tree.x + 60 + j * 500, t_tree.y - 78, 30, 85);
-    pop();
+      push();
+      noFill();
+      stroke(0);
+      rect(this.x + 135, this.y + 11, 15, 5);
+      pop();
 
-    //LEAVES
-    push();
-    fill(8, 112, 0);
-    triangle(
-      t_tree.x + 30 + j * 500,
-      t_tree.y - 70,
-      t_tree.x + 120 + j * 500,
-      t_tree.y - 70,
-      t_tree.x + 75 + j * 500,
-      t_tree.y - 120
-    );
-    triangle(
-      t_tree.x + 40 + j * 500,
-      t_tree.y - 100,
-      t_tree.x + 110 + j * 500,
-      t_tree.y - 100,
-      t_tree.x + 75 + j * 500,
-      t_tree.y - 140
-    );
-    triangle(
-      t_tree.x + 50 + j * 500,
-      t_tree.y - 120,
-      t_tree.x + 100 + j * 500,
-      t_tree.y - 120,
-      t_tree.x + 75 + j * 500,
-      t_tree.y - 160
-    );
-    pop();
-  }
+      //TREE STRUCTURE
+
+      //STEM
+      push();
+      fill(110, 67, 0);
+      rect(this.x + 60, this.y - 78, 30, 85);
+      pop();
+
+      //LEAVES
+      push();
+      fill(8, 112, 0);
+      triangle(
+        this.x + 30,
+        this.y - 70,
+        this.x + 120,
+        this.y - 70,
+        this.x + 75,
+        this.y - 120
+      );
+      triangle(
+        this.x + 40,
+        this.y - 100,
+        this.x + 110,
+        this.y - 100,
+        this.x + 75,
+        this.y - 140
+      );
+      triangle(
+        this.x + 50,
+        this.y - 120,
+        this.x + 100,
+        this.y - 120,
+        this.x + 75,
+        this.y - 160
+      );
+      pop();
+    },
+  };
+
+  return t;
 }
 
 function drawMoon() {
@@ -639,15 +640,18 @@ function drawLamp(x, y) {
     draw: function () {
       push();
       fill(35);
+
       beginShape();
       vertex(this.x, this.y);
       vertex(this.x + 5, this.y - 25);
       vertex(this.x + 30, this.y - 25);
       vertex(this.x + 35, this.y);
       endShape();
+
       rect(this.x + 12, this.y - 100, 10, 80);
       rect(this.x + 2, this.y - 100, 30, 5);
       rect(this.x - 3, this.y - 103, 40, 5);
+
       beginShape();
       vertex(this.x + 5, this.y - 103);
       vertex(this.x + 3, this.y - 130);
@@ -663,49 +667,17 @@ function drawLamp(x, y) {
       vertex(this.x + 25, this.y - 108);
       vertex(this.x + 10, this.y - 108);
       endShape();
+
       fill(35);
       rect(this.x - 3, this.y - 130, 40, 5);
       rect(this.x + 2, this.y - 133, 30, 5);
       ellipse(this.x + 16, this.y - 134, 10);
+
       pop();
     },
   };
 
   return l;
-
-  // for (var i = 0; i < lamps.length; i++) {
-  //   push();
-  //   fill(35);
-  //   beginShape();
-  //   vertex(t_lamp[i].x, t_lamp[i].y);
-  //   vertex(t_lamp[i].x + 5, t_lamp[i].y - 25);
-  //   vertex(t_lamp[i].x + 30, t_lamp[i].y - 25);
-  //   vertex(t_lamp[i].x + 35, t_lamp[i].y);
-  //   endShape();
-  //   rect(t_lamp[i].x + 12, t_lamp[i].y - 100, 10, 80);
-  //   rect(t_lamp[i].x + 2, t_lamp[i].y - 100, 30, 5);
-  //   rect(t_lamp[i].x - 3, t_lamp[i].y - 103, 40, 5);
-  //   beginShape();
-  //   vertex(t_lamp[i].x + 5, t_lamp[i].y - 103);
-  //   vertex(t_lamp[i].x + 3, t_lamp[i].y - 130);
-  //   vertex(t_lamp[i].x + 33, t_lamp[i].y - 130);
-  //   vertex(t_lamp[i].x + 29, t_lamp[i].y - 103);
-  //   endShape();
-
-  //   //lamp
-  //   fill(255, 215, 0);
-  //   beginShape();
-  //   vertex(t_lamp[i].x + 8, t_lamp[i].y - 125);
-  //   vertex(t_lamp[i].x + 27, t_lamp[i].y - 125);
-  //   vertex(t_lamp[i].x + 25, t_lamp[i].y - 108);
-  //   vertex(t_lamp[i].x + 10, t_lamp[i].y - 108);
-  //   endShape();
-  //   fill(35);
-  //   rect(t_lamp[i].x - 3, t_lamp[i].y - 130, 40, 5);
-  //   rect(t_lamp[i].x + 2, t_lamp[i].y - 133, 30, 5);
-  //   ellipse(t_lamp[i].x + 16, t_lamp[i].y - 134, 10);
-  //   pop();
-  // }
 }
 
 function drawCanyon(t_canyon) {
