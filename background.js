@@ -684,13 +684,6 @@ function drawLamp(x, y) {
   return l;
 }
 
-function Canyon(x, y, width) {
-  (this.x = x), (this.y = y), (this.width = width);
-
-  //structure
-  this.draw = function () {};
-}
-
 function drawCanyon(t_canyon) {
   // ------------ CANYON ------------
 
