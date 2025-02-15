@@ -10,6 +10,7 @@ let police_world;
 let gameChar_w;
 let gameChar_h;
 let hasDied;
+let baseLine;
 
 //game & pause state
 let gameState;
@@ -161,7 +162,7 @@ function draw() {
   pop(); // end of translate
 
   // ------------------ 9. CLOUDS ------------------
-  // drawMovingCloud();
+  drawMovingCloud();
   drawCloud();
 
   // ------------------ 10. MOON ------------------
@@ -313,14 +314,14 @@ function draw() {
 
   // ---------- GAME OVER MENU ----------
 
-  if (police.position.y == 850 || police.position.y == 800) {
+  if (police.position.y >= 850 || police.position.y == 800) {
     hasDied = true;
     if (hasDied) {
       deathSound.play();
     }
   }
 
-  if (police.position.y > 1000) {
+  if (police.position.y > 900) {
     // gameState = 4;
     initialSetup(); // reset the game
     gameState = 1; //game starts again
@@ -410,38 +411,37 @@ function draw() {
 
     // ---------- JUMPING ----------
     if (isJump) {
-      police.position.y -= 3; // If Jump is true then the character will go up
+      police.position.y += police.velocity; // If Jump is true then the character will go up
     }
 
-    if (police.position.y <= ground.y - 10) {
-      // If the character is above ground.y - 10
-      isJump = false; // Cannot Jump
-      isFall = true; // Will Fall
+    if (isFall) {
+      police.position.y += police.velocity; // -> Will Fall Down if isFall is true
+      police.velocity += police.gravity; // gravity (when falling down gets faster)
+    }
+
+    if (police.position.y > baseLine && isFall) {
+      // If the character is below the ground
+      isFall = false; //cannot fall
+      isJump = false; //no jump animation
+      police.position.y = baseLine; //will stay at the baseline
+      police.velocity = 0; // cannot move because no speed
     }
 
     if (isLeft) {
       if (police.position.x > width * 0.2) {
         // to implement side scrolling so that when the character is almost to the end of the screen, the camera will go the left
 
-        police.position.x -= 3; // -> Move the Character to the Left
+        police.position.x -= police.speed; // -> Move the Character to the Left
       } else {
-        scrollPos += 3; // -> The Camera will Move to the Right
+        scrollPos += police.speed; // -> The Camera will Move to the Right
       }
     } else if (isRight) {
       if (police.position.x < width * 0.8) {
         // if camera is almost at the corner, it will move the
-        police.position.x += 3; // -> Move the Character to the Right
+        police.position.x += police.speed; // -> Move the Character to the Right
       } else {
-        scrollPos -= 3; // -> Move the camera to the left
+        scrollPos -= police.speed; // -> Move the camera to the left
       }
-    }
-    if (isFall) {
-      police.position.y += 1; // -> Will Fall Down if isFall is true
-    }
-
-    if (police.position.y >= ground.y + 60) {
-      // If the character is below the ground
-      isFall = false; // The character will land in the ground.y + 60
     }
   }
 
@@ -564,9 +564,11 @@ function keyPressed() {
     isRight = true;
   }
   if (keyCode == 87) {
-    if (police.position.y >= ground.y + 60) {
-      isJump = true;
+    if (police.position.y == baseLine) {
+      isJump = true; //can jump
+      police.velocity = police.jumpPower; // jump power of the character
       jumpSound.play(); //jump sound to appear
+      isFall = true; // fall
     }
   }
 }
