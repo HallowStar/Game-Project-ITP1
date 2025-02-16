@@ -14,6 +14,8 @@ function initialSetup() {
     legDirection: -2,
   };
 
+  platforms = [];
+
   characterState = 0;
   gameState = 0;
   playState = 0;
@@ -101,24 +103,34 @@ function backgroundSetup() {
   //     width: random(200, 300),
   //   };
   // }
+  canyons = [];
 
-  canyon = [
-    {
-      x: random(200, 500),
-      y: 500,
-      width: random(180, 200),
-    },
-    {
-      x: random(600, 1000),
-      y: 500,
-      width: random(150, 200),
-    },
-    {
-      x: random(1300, 2000),
-      y: 500,
-      width: random(250, 300),
-    },
-  ];
+  for (var i = 0; i < 3; i++) {
+    var canyon = new Canyon(
+      random(200 + i * 600, 600 + i * 700),
+      500,
+      random(150 + i * 100, 300 + i * 60)
+    );
+    canyons.push(canyon);
+  }
+
+  // canyon = [
+  //   {
+  //     x: random(200, 500),
+  //     y: 500,
+  //     width: random(180, 200),
+  //   },
+  //   {
+  //     x: random(600, 1000),
+  //     y: 500,
+  //     width: random(150, 200),
+  //   },
+  //   {
+  //     x: random(1300, 2000),
+  //     y: 500,
+  //     width: random(250, 300),
+  //   },
+  // ];
 
   // ------------ LAMP ------------
   lamps = [];
@@ -230,20 +242,20 @@ function movingObject() {
   ];
 
   //------------ LAVA BALL ------------
-  lball = [
-    {
-      x: canyon[0].x + 50,
-      y: canyon[0].y + 200,
-    },
-    {
-      x: canyon[1].x + 50,
-      y: canyon[1].y + 200,
-    },
-    {
-      x: canyon[2].x + 50,
-      y: canyon[2].y + 200,
-    },
-  ];
+  // lball = [
+  //   {
+  //     x: canyon[0].x + 50,
+  //     y: canyon[0].y + 200,
+  //   },
+  //   {
+  //     x: canyon[1].x + 50,
+  //     y: canyon[1].y + 200,
+  //   },
+  //   {
+  //     x: canyon[2].x + 50,
+  //     y: canyon[2].y + 200,
+  //   },
+  // ];
 }
 
 function drawBuilding() {
@@ -684,30 +696,27 @@ function drawLamp(x, y) {
   return l;
 }
 
-function drawCanyon(t_canyon) {
-  // ------------ CANYON ------------
+function Canyon(x, y, width) {
+  this.x = x;
+  this.y = y;
+  this.width = width;
+  this.lx = this.x + 50;
+  this.ly = this.y + 200;
 
-  //The canyon I made by using reference from Coursera. However, I improved it more by adding spikes on both the left and right side. I also added lava beneath the canyon.
-
-  // CANYON LOOP & STRUCTURE
-  for (var i = 0; i < 3; i++) {
+  //structure
+  this.draw = function () {
     fill(139, 69, 19);
-    rect(t_canyon[i].x, t_canyon[i].y, t_canyon[i].width, 175);
+    rect(this.x, this.y, this.width, 175);
 
     push();
     stroke(0);
     strokeWeight(3);
+    line(this.x + 18, this.y + 170, this.x + 18, this.y + 500);
     line(
-      t_canyon[i].x + 18,
-      t_canyon[i].y + 170,
-      t_canyon[i].x + 18,
-      t_canyon[i].y + 500
-    );
-    line(
-      t_canyon[i].x + t_canyon[i].width - 18,
-      t_canyon[i].y + 170,
-      t_canyon[i].x + t_canyon[i].width - 18,
-      t_canyon[i].y + 500
+      this.x + this.width - 18,
+      this.y + 170,
+      this.x + this.width - 18,
+      this.y + 500
     );
     pop();
 
@@ -715,58 +724,56 @@ function drawCanyon(t_canyon) {
     for (var j = 0; j < 160; j += 20) {
       fill(35);
       triangle(
-        t_canyon[i].x + 25,
-        t_canyon[i].y + 10 + j,
-        t_canyon[i].x,
-        t_canyon[i].y + j,
-        t_canyon[i].x,
-        t_canyon[i].y + 20 + j
+        this.x + 25,
+        this.y + 10 + j,
+        this.x,
+        this.y + j,
+        this.x,
+        this.y + 20 + j
       );
     }
     triangle(
-      t_canyon[i].x + 25,
-      t_canyon[i].y + 170,
-      t_canyon[i].x,
-      t_canyon[i].y + 160,
-      t_canyon[i].x,
-      t_canyon[i].y + 170
+      this.x + 25,
+      this.y + 170,
+      this.x,
+      this.y + 160,
+      this.x,
+      this.y + 170
     );
 
     //SPIKE RIGHT
     for (j = 0; j < 160; j += 20) {
       fill(35);
       triangle(
-        t_canyon[i].x + t_canyon[i].width - 25,
-        t_canyon[i].y + 10 + j,
-        t_canyon[i].x + t_canyon[i].width,
-        t_canyon[i].y + j,
-        t_canyon[i].x + t_canyon[i].width,
-        t_canyon[i].y + 20 + j
+        this.x + this.width - 25,
+        this.y + 10 + j,
+        this.x + this.width,
+        this.y + j,
+        this.x + this.width,
+        this.y + 20 + j
       );
     }
 
     triangle(
-      t_canyon[i].x + t_canyon[i].width - 25,
-      t_canyon[i].y + 170,
-      t_canyon[i].x + t_canyon[i].width,
-      t_canyon[i].y + 160,
-      t_canyon[i].x + t_canyon[i].width,
-      t_canyon[i].y + 170
+      this.x + this.width - 25,
+      this.y + 170,
+      this.x + this.width,
+      this.y + 160,
+      this.x + this.width,
+      this.y + 170
     );
-  }
-}
 
-function ifCharacterIsInCanyon(t_canyon) {
-  // ------------ CANYON INTERACTION ------------
+    // //lava balls
+    // fill(234, 92, 15);
+    // rect(this.x + 20, this.y + 200, this.width - 40, 200);
+  };
 
-  //I learned the concept of Canyon Falling from Coursera
-
-  for (var i = 0; i < 3; i++) {
+  this.func = function () {
     //CANYON FALLING
     if (
-      police_world >= t_canyon[i].x + 40 &&
-      police_world <= t_canyon[i].x + t_canyon[i].width - 30 &&
-      police.position.y >= t_canyon[i].y + 50
+      police_world >= this.x + 40 &&
+      police_world <= this.x + this.width - 30 &&
+      police.position.y >= this.y + 50
     ) {
       baseLine = 900; // set the character to fall to a new position
       isJump = false; // cannot jump
@@ -775,7 +782,29 @@ function ifCharacterIsInCanyon(t_canyon) {
       isLeft = false;
       police.position.y += 10; // -- falling
     }
-  }
+  };
+
+  this.drawL = function () {
+    fill(234, 92, 15);
+    rect(this.x + 20, this.y + 200, this.width - 40, 200);
+    ellipse(this.lx, this.ly, 30);
+    ellipse(this.lx + 50, this.ly, 30);
+  };
+
+  this.lavaMove = function () {
+    if (gameState == 1) {
+      this.lx += 0.5;
+    }
+    if (gameState == 1) {
+      this.lx += 0.5;
+    }
+    if (this.lx > this.x + this.width - 90) {
+      this.lx = this.x + 40;
+    }
+    if (gameState == 0) {
+      this.lx = this.x + 50;
+    }
+  };
 }
 
 // ------------ COLLECTABLE ------------
@@ -852,34 +881,6 @@ function drawScoreBoard() {
   textSize(20);
   text("Score =    " + scoreBoard, board.x + 20, board.y + 40);
   pop();
-}
-
-function drawLava() {
-  //------------ LAVA ------------
-
-  fill(234, 92, 15);
-  for (var i = 0; i < canyon.length; i++) {
-    rect(canyon[i].x + 20, canyon[i].y + 200, canyon[i].width - 40, 200);
-    ellipse(lball[i].x, lball[i].y, 30);
-    ellipse(lball[i].x + 50, lball[i].y, 30);
-  }
-
-  //LAVA BALL MOVING
-
-  // I used a bit from the Coursera to make the lava ball moving and after it reached over a specific x coordinate, it will loop back from the beginning
-
-  for (var i = 0; i < lball.length; i++) {
-    if (gameState == 1) {
-      lball[i].x += 0.5;
-    }
-    if (lball[i].x > canyon[i].x + canyon[i].width - 90) {
-      lball[i].x = canyon[i].x + 40;
-    }
-    if (gameState == 0) {
-      canyon[i].x = 200 + i * 800;
-      lball[i].x = canyon[i].x + 50;
-    }
-  }
 }
 
 function drawHeart() {
@@ -1017,4 +1018,13 @@ function drawFlag() {
       flag.y += 1; //if its police flag, then it will go down
     }
   }
+}
+
+function createPlatform() {
+  var p = {
+    x: 200,
+    y: 500,
+    length: 100,
+    draw,
+  };
 }

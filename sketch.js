@@ -29,7 +29,8 @@ let velocity;
 let gravity;
 let jumpPower;
 
-//background / item letiables
+//background / item variables
+let platforms;
 let clouds;
 let moon;
 let building;
@@ -38,7 +39,7 @@ let f_building;
 let trees;
 let lamps;
 let board;
-let canyon;
+let canyons;
 let lball;
 let coins;
 let coinCount;
@@ -148,8 +149,14 @@ function draw() {
   // drawTree(tree);
 
   // ------------------ 6. CANYON ------------------
-  drawCanyon(canyon);
-  ifCharacterIsInCanyon(canyon);
+  // drawCanyon(canyon);
+  // ifCharacterIsInCanyon(canyon);
+
+  for (var i = 0; i < canyons.length; i++) {
+    var canyon = canyons[i];
+    canyon.draw();
+    canyon.func();
+  }
 
   // ------------------ 7. FLAG ------------------
   drawFlag();
@@ -210,7 +217,10 @@ function draw() {
 
   push();
   translate(scrollPos, 0); //as the camera moves the object move
-  drawLava(canyon, lball); // put below to make it layered at the end
+  for (var i = 0; i < canyons.length; i++) {
+    canyons[i].drawL();
+    canyons[i].lavaMove();
+  }
   pop();
 
   // ------------------ PLAY SCREEN ------------------
