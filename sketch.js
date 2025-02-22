@@ -11,6 +11,7 @@ let gameChar_w;
 let gameChar_h;
 let hasDied;
 let baseLine;
+let enemies;
 
 //game & pause state
 let gameState;
@@ -138,25 +139,14 @@ function draw() {
   streetRoad();
 
   //-------- 4. LAMP ------------
-  for (var i = 0; i < lamps.length; i++) {
-    lamps[i].draw();
-  }
+  drawLamp();
 
   // -------- 5. TREE -----------
-  for (var i = 0; i < trees.length; i++) {
-    trees[i].draw();
-  }
-  // drawTree(tree);
+  drawTree();
 
   // ------------------ 6. CANYON ------------------
-  // drawCanyon(canyon);
-  // ifCharacterIsInCanyon(canyon);
 
-  for (var i = 0; i < canyons.length; i++) {
-    var canyon = canyons[i];
-    canyon.draw();
-    canyon.func();
-  }
+  drawCanyon();
 
   // ------------------ 7. FLAG ------------------
   drawFlag();
@@ -165,6 +155,12 @@ function draw() {
 
   // ------------------ 1. Coin
   drawCoin(coins);
+
+  //enemy
+  drawEnemies();
+
+  //platform
+  drawPlatform();
 
   pop(); // end of translate
 
@@ -216,11 +212,11 @@ function draw() {
   }
 
   push();
+
   translate(scrollPos, 0); //as the camera moves the object move
-  for (var i = 0; i < canyons.length; i++) {
-    canyons[i].drawL();
-    canyons[i].lavaMove();
-  }
+
+  drawLava();
+
   pop();
 
   // ------------------ PLAY SCREEN ------------------
@@ -339,7 +335,6 @@ function draw() {
 
     if (lives < 1) {
       gameState = 5; // if live is zero then the game is over
-      live = 3;
     }
   }
 
@@ -429,12 +424,14 @@ function draw() {
       police.velocity += police.gravity; // gravity (when falling down gets faster)
     }
 
-    if (police.position.y > baseLine && isFall) {
+    if (police.position.y >= baseLine) {
       // If the character is below the ground
       isFall = false; //cannot fall
       isJump = false; //no jump animation
       police.position.y = baseLine; //will stay at the baseline
       police.velocity = 0; // cannot move because no speed
+    } else {
+      isFall = true;
     }
 
     if (isLeft) {

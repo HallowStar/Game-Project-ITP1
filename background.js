@@ -14,7 +14,24 @@ function initialSetup() {
     legDirection: -2,
   };
 
+  robber = {
+    position: createVector(45, 137),
+    handDeg: 35,
+    handDirection: -1,
+    legDeg: 45,
+    handDirection: -1,
+  };
+
   platforms = [];
+
+  platforms.push(createPlatform(200, 430, 200));
+  platforms.push(createPlatform(300, 330, 300));
+  platforms.push(createPlatform(850, 390, 200));
+  platforms.push(createPlatform(1200, 320, 100));
+  platforms.push(createPlatform(1800, 450, random(100, 500)));
+
+  enemies = [];
+  enemies.push(createEnemies(210, 415, 100));
 
   characterState = 0;
   gameState = 0;
@@ -88,56 +105,30 @@ function backgroundSetup() {
 
   trees = [];
 
-  for (var j = -50; j < 50; j++) {
-    var tree = drawTree(1030 + j * 500, 475);
-    trees.push(tree);
+  for (let j = -50; j < 50; j++) {
+    trees.push(createTree(1030 + j * 500, 475));
   }
 
   //------------ CANYON ------------
 
-  // canyons = [];
-  // for (var i = 0; i < 3; i++) {
-  //   var canyon = {
-  //     x: random(200 + i * 400, 500 + i * 500),
-  //     y: 500,
-  //     width: random(200, 300),
-  //   };
-  // }
   canyons = [];
 
-  for (var i = 0; i < 3; i++) {
-    var canyon = new Canyon(
-      random(200 + i * 600, 600 + i * 700),
-      500,
-      random(150 + i * 100, 300 + i * 60)
+  for (let i = 0; i < 3; i++) {
+    canyons.push(
+      createCanyon(
+        random(200 + i * 600, 600 + i * 700),
+        500,
+        random(150 + i * 100, 300 + i * 60)
+      )
     );
-    canyons.push(canyon);
   }
-
-  // canyon = [
-  //   {
-  //     x: random(200, 500),
-  //     y: 500,
-  //     width: random(180, 200),
-  //   },
-  //   {
-  //     x: random(600, 1000),
-  //     y: 500,
-  //     width: random(150, 200),
-  //   },
-  //   {
-  //     x: random(1300, 2000),
-  //     y: 500,
-  //     width: random(250, 300),
-  //   },
-  // ];
 
   // ------------ LAMP ------------
   lamps = [];
 
-  for (var i = 0; i < 100; i++) {
-    var lamp = drawLamp(-660 + i * 500, 480);
-    lamps.push(lamp);
+  for (let i = 0; i < 100; i++) {
+    // let lamp = drawLamp(-660 + i * 500, 480);
+    lamps.push(createLamp(-660 + i * 500, 480));
   }
 
   //------------ COIN BOARD ------------
@@ -263,7 +254,7 @@ function drawBuilding() {
 
   //Using the loop function learned from Coursera to duplicate buildings and its spike (triangle). Then I developed my own objects such as spiky buildings, lamps, and normal building.
 
-  for (var i = 0; i < building_x.length; i++) {
+  for (let i = 0; i < building_x.length; i++) {
     fill(f_building.color + i * 10, 104, 68);
     rect(building_x[i], building.y, 500, 500);
 
@@ -285,7 +276,7 @@ function drawBuilding() {
     rect(building_x[i] + 380, building.y + 50, 60);
 
     //triangles (spike)
-    for (var j = 0; j < 5; j++) {
+    for (let j = 0; j < 5; j++) {
       fill(f_building.color + i * 10, 104, 68);
       triangle(
         building_x[i] + 50 + j * 100,
@@ -302,7 +293,7 @@ function drawBuilding() {
 function drawNormalBuilding() {
   // ------------ NORMAL BUILDING ------------
 
-  for (var i = 0; i < n_building_x.length; i++) {
+  for (let i = 0; i < n_building_x.length; i++) {
     push();
     fill(230, n_building.color + i * 10, 50);
     rect(n_building_x[i], n_building.y, 500, 700);
@@ -334,30 +325,30 @@ function drawNormalBuilding() {
 function drawFallenBuilding() {
   //------------ FALLEN BUILDING ------------
 
-  for (var j = 0; j < f_building_x.length; j++) {
+  for (let j = 0; j < f_building_x.length; j++) {
     fill(f_building.color + j * 10, 104, 68);
     rect(f_building_x[j], f_building.y, 500, 400);
 
     //window
     //first row
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
       fill(255, 215, 0);
       rect(f_building_x[j] + 50 + i * 100, f_building.y + 40, 50);
     }
 
     //second row
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
       fill(255, 215, 0);
       rect(f_building_x[j] + 50 + i * 100, f_building.y + 140, 50, 70);
     }
 
     //third row
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
       rect(f_building_x[j] + 50 + i * 100, f_building.y + 250, 50);
     }
 
     //triangle spike
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
       fill(f_building.color + j * 10, 104, 68);
       triangle(
         f_building_x[j] + 550,
@@ -394,7 +385,7 @@ function streetRoad() {
 function drawCloud() {
   // ------------ CLOUD ------------
 
-  for (var i = 0; i < clouds.length; i++) {
+  for (let i = 0; i < clouds.length; i++) {
     fill(255);
 
     let cloud = clouds[i];
@@ -421,8 +412,8 @@ function drawCloud() {
 function drawMovingCloud() {
   // ------------ CLOUD ANIMATION
 
-  for (var i = 0; i < clouds.length; i++) {
-    var cloud = clouds[i];
+  for (let i = 0; i < clouds.length; i++) {
+    let cloud = clouds[i];
     if (gameState == 1) {
       cloud.x += i + 2;
     }
@@ -443,114 +434,120 @@ function drawMovingCloud() {
   }
 }
 
+function Tree(x, y) {
+  this.x = x;
+  this.y = y;
+  this.draw = function () {
+    push();
+    stroke(0);
+    fill(160, 82, 45);
+    rect(this.x + 15, this.y + 1, 120, 10);
+    pop();
+
+    // ------------ ROCKS
+    for (let i = 0; i < 10; i++) {
+      push();
+      noFill();
+      stroke(0);
+      rect(this.x + i * 15, this.y - 4, 15, 5);
+      pop();
+    }
+
+    push();
+    noFill();
+    stroke(0);
+    rect(this.x, this.y + 1, 15, 5);
+    pop();
+
+    push();
+    noFill();
+    stroke(0);
+    rect(this.x, this.y + 6, 15, 5);
+    pop();
+
+    push();
+    noFill();
+    stroke(0);
+    rect(this.x, this.y + 11, 15, 5);
+    pop();
+
+    for (let i = 0; i < 10; i++) {
+      push();
+      noFill();
+      stroke(0);
+      rect(this.x + i * 15, this.y + 11, 15, 5);
+      pop();
+    }
+
+    push();
+    noFill();
+    stroke(0);
+    rect(this.x + 135, this.y + 1, 15, 5);
+    pop();
+
+    push();
+    noFill();
+    stroke(0);
+    rect(this.x + 135, this.y + 6, 15, 5);
+    pop();
+
+    push();
+    noFill();
+    stroke(0);
+    rect(this.x + 135, this.y + 11, 15, 5);
+    pop();
+
+    //TREE STRUCTURE
+
+    //STEM
+    push();
+    fill(110, 67, 0);
+    rect(this.x + 60, this.y - 78, 30, 85);
+    pop();
+
+    //LEAVES
+    push();
+    fill(8, 112, 0);
+    triangle(
+      this.x + 30,
+      this.y - 70,
+      this.x + 120,
+      this.y - 70,
+      this.x + 75,
+      this.y - 120
+    );
+    triangle(
+      this.x + 40,
+      this.y - 100,
+      this.x + 110,
+      this.y - 100,
+      this.x + 75,
+      this.y - 140
+    );
+    triangle(
+      this.x + 50,
+      this.y - 120,
+      this.x + 100,
+      this.y - 120,
+      this.x + 75,
+      this.y - 160
+    );
+    pop();
+  };
+}
+
+function createTree(x, y) {
+  return new Tree(x, y);
+}
+
 function drawTree(x, y) {
   //------------ TREE ------------
-
   //Using the loop method I learned from Coursera, I looped the trees a lot of times to make it as if there are infinite amount of trees
 
-  var t = {
-    x: x,
-    y: y,
-    draw: function () {
-      push();
-      stroke(0);
-      fill(160, 82, 45);
-      rect(this.x + 15, this.y + 1, 120, 10);
-      pop();
-
-      // ------------ ROCKS
-      for (var i = 0; i < 10; i++) {
-        push();
-        noFill();
-        stroke(0);
-        rect(this.x + i * 15, this.y - 4, 15, 5);
-        pop();
-      }
-
-      push();
-      noFill();
-      stroke(0);
-      rect(this.x, this.y + 1, 15, 5);
-      pop();
-
-      push();
-      noFill();
-      stroke(0);
-      rect(this.x, this.y + 6, 15, 5);
-      pop();
-
-      push();
-      noFill();
-      stroke(0);
-      rect(this.x, this.y + 11, 15, 5);
-      pop();
-
-      for (var i = 0; i < 10; i++) {
-        push();
-        noFill();
-        stroke(0);
-        rect(this.x + i * 15, this.y + 11, 15, 5);
-        pop();
-      }
-
-      push();
-      noFill();
-      stroke(0);
-      rect(this.x + 135, this.y + 1, 15, 5);
-      pop();
-
-      push();
-      noFill();
-      stroke(0);
-      rect(this.x + 135, this.y + 6, 15, 5);
-      pop();
-
-      push();
-      noFill();
-      stroke(0);
-      rect(this.x + 135, this.y + 11, 15, 5);
-      pop();
-
-      //TREE STRUCTURE
-
-      //STEM
-      push();
-      fill(110, 67, 0);
-      rect(this.x + 60, this.y - 78, 30, 85);
-      pop();
-
-      //LEAVES
-      push();
-      fill(8, 112, 0);
-      triangle(
-        this.x + 30,
-        this.y - 70,
-        this.x + 120,
-        this.y - 70,
-        this.x + 75,
-        this.y - 120
-      );
-      triangle(
-        this.x + 40,
-        this.y - 100,
-        this.x + 110,
-        this.y - 100,
-        this.x + 75,
-        this.y - 140
-      );
-      triangle(
-        this.x + 50,
-        this.y - 120,
-        this.x + 100,
-        this.y - 120,
-        this.x + 75,
-        this.y - 160
-      );
-      pop();
-    },
-  };
-
-  return t;
+  for (let i = 0; i < trees.length; i++) {
+    const tree = trees[i];
+    tree.draw();
+  }
 }
 
 function drawMoon() {
@@ -644,56 +641,62 @@ function drawMountain() {
   pop();
 }
 
+function Lamp(x, y) {
+  this.x = x;
+  this.y = y;
+  this.draw = function () {
+    push();
+    fill(35);
+
+    beginShape();
+    vertex(this.x, this.y);
+    vertex(this.x + 5, this.y - 25);
+    vertex(this.x + 30, this.y - 25);
+    vertex(this.x + 35, this.y);
+    endShape();
+
+    rect(this.x + 12, this.y - 100, 10, 80);
+    rect(this.x + 2, this.y - 100, 30, 5);
+    rect(this.x - 3, this.y - 103, 40, 5);
+
+    beginShape();
+    vertex(this.x + 5, this.y - 103);
+    vertex(this.x + 3, this.y - 130);
+    vertex(this.x + 33, this.y - 130);
+    vertex(this.x + 29, this.y - 103);
+    endShape();
+
+    //lamp
+    fill(255, 215, 0);
+    beginShape();
+    vertex(this.x + 8, this.y - 125);
+    vertex(this.x + 27, this.y - 125);
+    vertex(this.x + 25, this.y - 108);
+    vertex(this.x + 10, this.y - 108);
+    endShape();
+
+    fill(35);
+    rect(this.x - 3, this.y - 130, 40, 5);
+    rect(this.x + 2, this.y - 133, 30, 5);
+    ellipse(this.x + 16, this.y - 134, 10);
+
+    pop();
+  };
+}
+
+function createLamp(x, y) {
+  return new Lamp(x, y);
+}
+
 function drawLamp(x, y) {
   // ------------ LAMP ------------
-
   //I made the lamp by myself with a lamp reference from google -> https://www.shutterstock.com/search/street-lamp-drawing
   //Same like the tree, I duplicated a lot of times
 
-  var l = {
-    x: x,
-    y: y,
-    draw: function () {
-      push();
-      fill(35);
-
-      beginShape();
-      vertex(this.x, this.y);
-      vertex(this.x + 5, this.y - 25);
-      vertex(this.x + 30, this.y - 25);
-      vertex(this.x + 35, this.y);
-      endShape();
-
-      rect(this.x + 12, this.y - 100, 10, 80);
-      rect(this.x + 2, this.y - 100, 30, 5);
-      rect(this.x - 3, this.y - 103, 40, 5);
-
-      beginShape();
-      vertex(this.x + 5, this.y - 103);
-      vertex(this.x + 3, this.y - 130);
-      vertex(this.x + 33, this.y - 130);
-      vertex(this.x + 29, this.y - 103);
-      endShape();
-
-      //lamp
-      fill(255, 215, 0);
-      beginShape();
-      vertex(this.x + 8, this.y - 125);
-      vertex(this.x + 27, this.y - 125);
-      vertex(this.x + 25, this.y - 108);
-      vertex(this.x + 10, this.y - 108);
-      endShape();
-
-      fill(35);
-      rect(this.x - 3, this.y - 130, 40, 5);
-      rect(this.x + 2, this.y - 133, 30, 5);
-      ellipse(this.x + 16, this.y - 134, 10);
-
-      pop();
-    },
-  };
-
-  return l;
+  for (let i = 0; i < lamps.length; i++) {
+    const lamp = lamps[i];
+    lamp.draw();
+  }
 }
 
 function Canyon(x, y, width) {
@@ -721,7 +724,7 @@ function Canyon(x, y, width) {
     pop();
 
     // SPIKE LEFT
-    for (var j = 0; j < 160; j += 20) {
+    for (let j = 0; j < 160; j += 20) {
       fill(35);
       triangle(
         this.x + 25,
@@ -762,10 +765,6 @@ function Canyon(x, y, width) {
       this.x + this.width,
       this.y + 170
     );
-
-    // //lava balls
-    // fill(234, 92, 15);
-    // rect(this.x + 20, this.y + 200, this.width - 40, 200);
   };
 
   this.func = function () {
@@ -775,7 +774,7 @@ function Canyon(x, y, width) {
       police_world <= this.x + this.width - 30 &&
       police.position.y >= this.y + 50
     ) {
-      baseLine = 900; // set the character to fall to a new position
+      baseLine = 900;
       isJump = false; // cannot jump
       isFall = true; // falling animation
       isRight = false; // -- cannot move left or right
@@ -807,6 +806,26 @@ function Canyon(x, y, width) {
   };
 }
 
+function createCanyon(x, y, width) {
+  return new Canyon(x, y, width);
+}
+
+function drawCanyon() {
+  for (let i = 0; i < canyons.length; i++) {
+    const canyon = canyons[i];
+    canyon.draw();
+    canyon.func();
+  }
+}
+
+function drawLava() {
+  for (let i = 0; i < canyons.length; i++) {
+    const canyon = canyons[i];
+    canyon.drawL();
+    canyon.lavaMove();
+  }
+}
+
 // ------------ COLLECTABLE ------------
 
 function drawCoin(t_coin) {
@@ -814,7 +833,7 @@ function drawCoin(t_coin) {
 
   // I made the structure of the coin by myself. However I used the coursera concept so that when the coin is collected then it will dissappear. I improvised a little bit by making the coin collect board to keep track of the collected coins
 
-  for (var i = 0; i < coins.length; i++) {
+  for (let i = 0; i < coins.length; i++) {
     if (t_coin[i].coin_collect == false) {
       push();
       stroke(0);
@@ -833,7 +852,7 @@ function drawCoin(t_coin) {
 
       //COIN COLLECT & SCORE
 
-      var d = dist(
+      let d = dist(
         police_world,
         police.position.y,
         t_coin[i].x,
@@ -884,7 +903,7 @@ function drawScoreBoard() {
 }
 
 function drawHeart() {
-  for (var i = 0; i < lives; i++) {
+  for (let i = 0; i < lives; i++) {
     //When the condition is false it will appear
     let heartt = heart[i];
     if (heartt.isGone == false) {
@@ -950,7 +969,7 @@ function drawFlag() {
       flag.y - 275
     );
 
-    for (var i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       triangle(
         flag.x + 39 + i * 7,
         flag.y - 257,
@@ -971,6 +990,8 @@ function drawFlag() {
   } else {
     //POLICE FLAG
 
+    push();
+
     fill(0, 139, 139);
     rect(flag.x, flag.y - 300, 100, 60);
 
@@ -987,9 +1008,11 @@ function drawFlag() {
     stroke(0);
     strokeWeight(5);
     point(flag.x + 53, flag.y - 263);
+
+    pop();
   }
 
-  var d = abs(police_world - flag.x); // distance between characters & flag
+  let d = abs(police_world - flag.x); // distance between characters & flag
 
   if (d < 10) {
     if (flag.y >= 560 && flag.y <= 800 && flag.isReach == false) {
@@ -1020,11 +1043,130 @@ function drawFlag() {
   }
 }
 
-function createPlatform() {
-  var p = {
-    x: 200,
-    y: 500,
-    length: 100,
-    draw,
+function Platform(x, y, length) {
+  this.x = x;
+  this.y = y;
+  this.length = length;
+
+  this.draw = function () {
+    push();
+    fill(105);
+    stroke(0);
+    strokeWeight(1);
+    rect(this.x, this.y, this.length, 25, 50);
+    pop();
   };
+
+  this.checkContact = function (p_x, p_y) {
+    if (
+      p_x > this.x - 10 &&
+      p_x < this.x + this.length + 10 &&
+      p_y >= this.y - 12 &&
+      p_y <= this.y + 10
+    ) {
+      return true; // Character is on this platform
+    }
+    return false;
+  };
+}
+
+function createPlatform(x, y, length) {
+  return new Platform(x, y, length);
+}
+
+function drawPlatform() {
+  let onAnyPlatform = false; // track if player is on any platform
+
+  for (let i = 0; i < platforms.length; i++) {
+    const platform = platforms[i];
+    platform.draw();
+
+    if (platform.checkContact(police_world, police.position.y)) {
+      baseLine = platform.y - 12; // set the baseline to be at platform level
+      onAnyPlatform = true; // character is standing on the platform
+    }
+  }
+
+  // If player is not on any platform, they should fall
+  if (!onAnyPlatform && police.position.y < 560) {
+    baseLine = 560; // Default ground level
+  }
+}
+
+function Enemies(x, y, range) {
+  this.x = x;
+  this.y = y;
+  this.range = range;
+
+  this.handDeg = 35;
+  this.handDirection = 0.5;
+
+  this.currentX = x;
+  this.incr = 1;
+
+  this.updateHand = function () {
+    if (this.handDeg >= 35) {
+      this.handDirection = -0.5;
+    } else if (this.handDeg <= -10) {
+      this.handDirection = 0.5;
+    }
+    this.handDeg += this.handDirection;
+  };
+
+  this.update = function () {
+    if (gameState == 1) {
+      this.currentX += this.incr;
+
+      if (this.currentX >= this.x + this.range) {
+        this.incr = -1;
+      } else if (this.currentX <= this.x) {
+        this.incr = 1;
+      }
+
+      this.updateHand(); //hand animation
+    }
+  };
+
+  this.draw = function () {
+    if (this.incr == 1) {
+      enemyTurnRight(this.currentX, this.y, this.handDeg, this.handDirection);
+    } else if (this.incr == -1) {
+      enemyTurnLeft(this.currentX, this.y, this.handDeg, this.handDirection);
+    }
+  };
+
+  this.checkContact = function (p_x, p_y) {
+    let d = dist(p_x, p_y, this.currentX, this.y);
+    if (d < 20) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+}
+
+function createEnemies(x, y, range) {
+  return new Enemies(x, y, range);
+}
+
+function drawEnemies() {
+  for (let i = 0; i < enemies.length; i++) {
+    const enemy = enemies[i];
+    enemy.draw();
+    enemy.update();
+
+    let isContact = enemy.checkContact(police_world, police.position.y);
+
+    if (isContact) {
+      if (lives > 0) {
+        initialSetup();
+        gameState = 1;
+        lives--;
+      }
+
+      if (lives < 1) {
+        gameState = 5; // if live is zero then the game is over
+      }
+    }
+  }
 }

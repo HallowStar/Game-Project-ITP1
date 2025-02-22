@@ -12,7 +12,7 @@ function characterTurnRight() {
   //feet
   fill(0);
 
-  if (police.position.y == 560) {
+  if (police.position.y <= 560 && !isFall) {
     if (police.legDeg >= 55) {
       police.legDirection = -2;
     } else if (police.legDeg <= -55) {
@@ -143,7 +143,7 @@ function characterTurnLeft() {
   fill(255, 228, 196);
   ellipse(police.position.x, police.position.y - 55, gameChar_h + 10);
 
-  if (police.position.y == 560) {
+  if (police.position.y <= 560 && !isFall) {
     if (police.legDeg >= 55) {
       police.legDirection = -2;
     } else if (police.legDeg <= -55) {
@@ -746,5 +746,165 @@ function characterFallingRight() {
     gameChar_w,
     gameChar_h - 15
   );
+  pop();
+}
+
+function enemyTurnRight(x, y, handDeg, handD) {
+  //face & hat
+  push();
+  fill(255, 178, 102);
+  rect(x - 13, y - 55, 26, 20, 0, 0, 25, 25);
+  fill(0);
+  arc(x, y - 55, 25, 25, PI, 0, PIE);
+  curveVertex();
+  pop();
+
+  //eye
+  ellipse(x - 4, y - 49, 8);
+  fill(255);
+  ellipse(x - 3, y - 49, 2);
+
+  fill(0);
+  ellipse(x + 6, y - 49, 8);
+  fill(255);
+  ellipse(x + 6, y - 49, 2);
+
+  //mouth
+  push();
+  stroke(0);
+  fill(0);
+  beginShape();
+  vertex(x - 5, y - 40);
+  vertex(x - 5, y - 42);
+  vertex(x + 3, y - 39);
+  vertex(x, y - 50);
+  endShape();
+  pop();
+
+  //right hand
+  push();
+  fill(255, 141, 30);
+  translate(x + 5, y - 33);
+  rotate(radians(-handDeg + 30));
+  rect(0, 0, 20, 7, 3, 3, 0, 0);
+  fill(255, 178, 102);
+  rect(18, 0, 5, 7, 0, 3, 3, 0);
+  pop();
+
+  // leg
+  push();
+  fill(230, 115, 0);
+  rect(x - 8, y - 5, 8, 20, 5, 5);
+  fill(0);
+  rect(x - 8, y + 10, 8, 5, 0, 0, 5, 5);
+  fill(230, 115, 0);
+
+  rect(x + 2, y - 5, 8, 20, 5, 5);
+  fill(0);
+  rect(x + 2, y + 10, 8, 5, 0, 0, 5, 5);
+
+  pop();
+
+  //body
+  push();
+  fill(254, 115, 0);
+  rect(x - 12, y - 35, 25, 35, 9, 9, 9, 9);
+  pop();
+
+  //shirt
+  fill(0);
+  rect(x - 8, y - 30, 20, 5);
+  rect(x - 8, y - 20, 20, 5);
+  rect(x - 8, y - 10, 20, 5);
+
+  // left hand
+
+  push();
+  fill(255, 141, 30);
+  translate(x - 10, y - 34);
+  rotate(radians(handDeg));
+  rect(0, 0, 7, 20, 3, 3, 0, 0);
+  fill(255, 178, 102);
+  rect(0, 20, 7, 5, 0, 0, 3, 3);
+  pop();
+}
+
+function enemyTurnLeft(x, y, handDeg, handD) {
+  //face & hat
+  push();
+  fill(255, 178, 102);
+  rect(x - 13, y - 55, 26, 20, 0, 0, 25, 25);
+  fill(0);
+  arc(x, y - 55, 25, 25, PI, 0, PIE);
+  curveVertex();
+  pop();
+
+  //eye
+  ellipse(x - 4, y - 49, 8);
+  fill(255);
+  ellipse(x - 5, y - 49, 2);
+
+  fill(0);
+  ellipse(x + 6, y - 49, 8);
+  fill(255);
+  ellipse(x + 5, y - 49, 2);
+
+  //mouth
+  push();
+  stroke(0);
+  fill(0);
+  beginShape();
+  vertex(x + 5, y - 40);
+  vertex(x + 5, y - 42);
+  vertex(x - 2, y - 39);
+  vertex(x, y - 50);
+  endShape();
+  pop();
+
+  //left hand (from right hand)
+  push();
+  fill(255, 141, 30);
+  translate(x - 3, y - 33);
+  rotate(radians(-handDeg));
+  rect(0, 0, -20, 7);
+  fill(255, 178, 102);
+  rect(-23, 0, 5, 7, 5);
+  pop();
+
+  // leg
+  push();
+  fill(230, 115, 0);
+  rect(x - 8, y - 5, 8, 20, 5, 5);
+  fill(0);
+  rect(x - 8, y + 10, 8, 5, 0, 0, 5, 5);
+  fill(230, 115, 0);
+
+  rect(x + 2, y - 5, 8, 20, 5, 5);
+  fill(0);
+  rect(x + 2, y + 10, 8, 5, 0, 0, 5, 5);
+
+  pop();
+
+  //body
+  push();
+  fill(254, 115, 0);
+  rect(x - 12, y - 35, 25, 35, 9, 9, 9, 9);
+  pop();
+
+  //shirt
+  fill(0);
+  rect(x - 10, y - 30, 20, 5);
+  rect(x - 10, y - 20, 20, 5);
+  rect(x - 10, y - 10, 20, 5);
+
+  // right hand
+
+  push();
+  fill(255, 141, 30);
+  translate(x + 7, y - 32);
+  rotate(radians(handDeg));
+  rect(0, 0, 7, 20, 3, 3, 0, 0);
+  fill(255, 178, 102);
+  rect(0, 20, 7, 5, 0, 0, 3, 3);
   pop();
 }
