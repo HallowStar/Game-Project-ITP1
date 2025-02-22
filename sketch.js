@@ -154,7 +154,7 @@ function draw() {
   // ------------------ 8. COLLECTABLE ------------------
 
   // ------------------ 1. Coin
-  drawCoin(coins);
+  drawCoin();
 
   //enemy
   drawEnemies();
@@ -341,68 +341,17 @@ function draw() {
   // ---------- GAME OVER YOU WIN ----------
 
   if (gameState == 4) {
-    // DARK BACKGROUND
-    background(0, 0, 0, 200);
-
-    //GAME OVER TEXT
-    push();
-    textSize(80);
-    textAlign(CENTER);
-    text("GAME OVER", width / 2, height / 2 - 100);
-    textSize(50);
-    text("You Win", width / 2, height / 2);
-    pop();
-
-    isJump = false; //cannot jump, fall, and move left or right
-    isRight = false;
-    isLeft = false;
-    isFall = false;
+    gameWin(); // win the game menu (located in menu.js)
   }
 
-  // ---------- GAME OVER / NEXT LEVEL ----------
+  // ---------- NEXT LEVEL ----------
   if (gameState == 5) {
-    // DARK BACKGROUND
-    background(0, 0, 0, 200);
+    nextLevel(); // next level (located in menu.js)
+  }
 
-    //GAME OVER TEXT
-    push();
-    textSize(80);
-    textAlign(CENTER);
-    text("GAME OVER", width / 2, height / 2 - 100);
-    pop();
-
-    //SOUND
-    if (gameOver) {
-      gameOverSound.play();
-      gameOver = false; // Prevents replay
-    }
-
-    //RESTART BUTTON (DARK)
-    push();
-    stroke(restart_menu.color);
-    fill(restart_menu.color - 255);
-    rect(restart_menu.x, restart_menu.y, 300, 100);
-    fill(restart_menu.color);
-    textSize(20);
-    text("Restart Game", restart_menu.x + 90, restart_menu.y + 57);
-    pop();
-
-    //RESTART BUTTON (WHITE)
-    if (
-      mouseX >= restart_menu.x &&
-      mouseX <= restart_menu.x + 300 &&
-      mouseY >= restart_menu.y &&
-      mouseY <= restart_menu.y + 100
-    ) {
-      push();
-      stroke(restart_menu.color - 255);
-      fill(restart_menu.color);
-      rect(restart_menu.x, restart_menu.y, 300, 100);
-      fill(restart_menu.color - 255);
-      textSize(20);
-      text("Restart Game", restart_menu.x + 90, restart_menu.y + 57);
-      pop();
-    }
+  //---------- GAME OVER ----------
+  if (gameState == 6) {
+    restartMenu(); // game over (located in menu.js)
   }
 
   if (gameState == 0 || gameState == 2) {
@@ -524,10 +473,21 @@ function mousePressed() {
     if (
       mouseX >= restart_menu.x &&
       mouseX <= restart_menu.x + 300 &&
-      mouseY >= restart_menu.y &&
+      mouseY >= restart_menu.y + 50 &&
       mouseY <= restart_menu.y + 100
     ) {
-      initialSetup(); //restart the game
+      initialSetup(); //next
+    }
+  }
+
+  if (gameState == 6) {
+    if (
+      mouseX >= restart_menu.x &&
+      mouseX <= restart_menu.x + 300 &&
+      restart_menu.y + 50 &&
+      restart_menu.y + 100
+    ) {
+      initialSetup();
     }
   }
 }
@@ -579,5 +539,3 @@ function keyPressed() {
     }
   }
 }
-
-// 0ther value

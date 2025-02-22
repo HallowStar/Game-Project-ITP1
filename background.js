@@ -1,7 +1,4 @@
 function initialSetup() {
-  gameChar_w = 10;
-  gameChar_h = 20;
-
   baseLine = 560;
 
   police = {
@@ -55,12 +52,6 @@ function initialSetup() {
     color: 255,
   };
 
-  //ground
-  ground = {
-    x: -1000,
-    y: 500,
-  };
-
   backgroundSetup();
   movingObject();
 }
@@ -95,7 +86,7 @@ function backgroundSetup() {
 
   //fallen building
   f_building = {
-    y: ground.y - 350,
+    y: 150,
     color: random(0, 255),
   };
 
@@ -140,41 +131,16 @@ function backgroundSetup() {
   // ------------ MOUNTAIN ------------
   mountain = {
     x: 1000,
-    y: ground.y,
+    y: 500,
   };
 
   // ------------ COLLECTABLE ITEM ------------
 
   // ------- COIN
-  coins = [
-    {
-      x: random(200, 600),
-      y: 540,
-      coin_collect: false,
-    },
-    {
-      x: random(400, 800),
-      y: 540,
-      coin_collect: false,
-    },
-    {
-      x: random(850, 1000),
-      y: 540,
-      coin_collect: false,
-    },
-    {
-      x: random(1050, 1400),
-      y: 540,
-      coin_collect: false,
-    },
-    {
-      x: random(1500, 2000),
-      y: 540,
-      coin_collect: false,
-    },
-  ];
 
-  coin_speed = 0.2;
+  coins = [];
+
+  coins.push(createCoin(random(200, 600), 540, false));
 
   // ------------ Live Board -----------
   heart = [
@@ -231,22 +197,6 @@ function movingObject() {
       size: random(70, 90),
     },
   ];
-
-  //------------ LAVA BALL ------------
-  // lball = [
-  //   {
-  //     x: canyon[0].x + 50,
-  //     y: canyon[0].y + 200,
-  //   },
-  //   {
-  //     x: canyon[1].x + 50,
-  //     y: canyon[1].y + 200,
-  //   },
-  //   {
-  //     x: canyon[2].x + 50,
-  //     y: canyon[2].y + 200,
-  //   },
-  // ];
 }
 
 function drawBuilding() {
@@ -365,16 +315,16 @@ function drawFallenBuilding() {
 function streetRoad() {
   //------------ STREET ROAD ------------
   fill(211);
-  rect(ground.x - 2000, ground.y - 35, 9000, 50);
+  rect(-3000, 465, 9000, 50);
 
   // ---- ROAD
   fill(35);
-  rect(ground.x - 2000, ground.y, 7000, 170);
+  rect(-3000, 500, 7000, 170);
 
   //----- YELLOW ROAD
   fill(255, 214, 85);
   for (i = -1000; i < 9000; i += 250) {
-    rect(ground.x + 100 + i, ground.y + 75, 100, 20);
+    rect(-900 + i, 575, 100, 20);
   }
 
   //DIRT
@@ -417,14 +367,6 @@ function drawMovingCloud() {
     if (gameState == 1) {
       cloud.x += i + 2;
     }
-
-    //CLOUD RESET (if press new game it will set to default position)
-
-    // I improvised this so that when the game reset (gamestate = 0) it will go back to the normal position as if I refreshed the page
-
-    // if (gameState == 0) {
-    //   cloud.x = 200 - i * 50;
-    // }
 
     //CLOUD LOOP
     if (cloud.x > 1800) {
@@ -828,63 +770,82 @@ function drawLava() {
 
 // ------------ COLLECTABLE ------------
 
-function drawCoin(t_coin) {
-  // ------------ COIN ------------
+function Coin(x, y, collect) {
+  this.x = x;
+  this.y = y;
+  this.collect = collect;
+  this.currentY = y;
+  this.range = 10;
+  this.incr = 0.5;
 
-  // I made the structure of the coin by myself. However I used the coursera concept so that when the coin is collected then it will dissappear. I improvised a little bit by making the coin collect board to keep track of the collected coins
-
-  for (let i = 0; i < coins.length; i++) {
-    if (t_coin[i].coin_collect == false) {
+  this.draw = function () {
+    if (this.collect == false) {
       push();
+
       stroke(0);
+
       fill(255, 140, 0);
-      ellipse(t_coin[i].x, t_coin[i].y, 35);
+      ellipse(this.x, this.currentY, 35);
+
       fill(255, 215, 0);
-      ellipse(t_coin[i].x, t_coin[i].y, 35 - 10);
+      ellipse(this.x, this.currentY, 35 - 10);
+
       strokeWeight(2);
+
       beginShape();
-      vertex(t_coin[i].x + 2, t_coin[i].y - 8);
-      vertex(t_coin[i].x - 2, t_coin[i].y - 3);
-      vertex(t_coin[i].x + 2, t_coin[i].y + 2);
-      vertex(t_coin[i].x - 2, t_coin[i].y + 7);
+      vertex(this.x + 2, this.currentY - 8);
+      vertex(this.x - 2, this.currentY - 3);
+      vertex(this.x + 2, this.currentY + 2);
+      vertex(this.x - 2, this.currentY + 7);
       endShape();
+
       pop();
+    }
+  };
 
-      //COIN COLLECT & SCORE
+  this.update = function () {
+    //COIN COLLECT & SCORE
 
-      let d = dist(
-        police_world,
-        police.position.y,
-        t_coin[i].x,
-        t_coin[i].y + 10
-      );
+    if (this.collect == false) {
+      let d = dist(police_world, police.position.y, this.x, this.currentY + 10);
 
       if (d < 38) {
-        t_coin[i].coin_collect = true; // coin becomes invisible
+        this.collect = true; // coin becomes invisible
         scoreBoard += 1;
         coinSound.play();
       }
     }
+  };
 
-    //COIN RESET
-    if (gameState == 0) {
-      t_coin[i].coin_collect = false; //the coin can be seen
-    }
+  //COIN RESET
+  if (gameState == 0) {
+    this.collect = false; //the coin can be seen
+  }
 
+  this.animation = function () {
     if (gameState == 1) {
-      // works when game is not in a pause state
-
       //COIN ANIMATION
-      t_coin[i].y += coin_speed;
+      this.currentY += this.incr;
 
-      if (t_coin[i].y >= 540) {
-        coin_speed *= -1;
-      }
-
-      if (t_coin[i].y <= 510) {
-        coin_speed *= -1;
+      if (this.currentY > this.y + this.range) {
+        this.incr = -0.5;
+      } else if (this.currentY <= this.y - 20) {
+        this.incr = 0.5;
       }
     }
+  };
+}
+
+function createCoin(x, y, collect) {
+  return new Coin(x, y, collect);
+}
+
+function drawCoin() {
+  for (var i = 0; i < coins.length; i++) {
+    const coin = coins[i];
+    coin.draw();
+    coin.update();
+    coin.animation();
   }
 }
 
@@ -1165,7 +1126,7 @@ function drawEnemies() {
       }
 
       if (lives < 1) {
-        gameState = 5; // if live is zero then the game is over
+        gameState = 6; // if live is zero then the game is over
       }
     }
   }
