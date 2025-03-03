@@ -12,6 +12,7 @@ let gameChar_h;
 let hasDied;
 let baseLine;
 let enemies;
+let infinite;
 
 //game & pause state
 let gameState;
@@ -23,7 +24,7 @@ let isLeft;
 let isRight;
 let isJump;
 let isFall;
-let scrollPos;
+let cameraPosX;
 let gameOver;
 
 //background / item variables
@@ -83,14 +84,14 @@ function preload() {
 
   //game win sound
   gameWinSound = loadSound("sounds/level-win.mp3");
-
-  //font
 }
 
 function setup() {
   createCanvas(1700, 850);
 
   difficulty = "easy";
+
+  infinite = false;
 
   scoreBoard = 0;
 
@@ -111,7 +112,9 @@ function setup() {
 }
 
 function draw() {
-  // gameState = 7;
+  // gameState = 2;
+
+  cameraPosX = police.position.x - width / 2; // set the position of the camera to be in the middle
 
   background(0); // set the background to black
 
@@ -130,7 +133,7 @@ function draw() {
   drawMountain();
 
   push(); //inside of translate
-  translate(scrollPos, 0); //to make the object moves when the camera move
+  translate(-cameraPosX, 0); //to make the object moves when the camera move
 
   // Draw Building (Spiky)
   drawBuildings();
@@ -165,25 +168,6 @@ function draw() {
   // Draw Platforms
   drawPlatform();
 
-  pop();
-
-  // End of translate
-
-  // Draw Clouds
-  drawCloud();
-
-  // Draw Moon
-  drawMoon();
-
-  // Draw Score Board
-  drawScoreBoard();
-
-  // Draw Level Board
-  drawLevel();
-
-  // Draw Hearts (Live)
-  drawHeart();
-
   // ------------------ Character ------------------
 
   //  Police Character (Main Character)
@@ -214,13 +198,27 @@ function draw() {
     characterFallingRight(); // Police Jumping Towards the Right Animation
   }
 
-  push(); // Lava is place here so that the order is below the character
-
-  translate(scrollPos, 0); //as the camera moves the object move
-
+  // Draw lava
   drawLava();
 
   pop();
+
+  // End of translate
+
+  // Draw Clouds
+  drawCloud();
+
+  // Draw Moon
+  drawMoon();
+
+  // Draw Score Board
+  drawScoreBoard();
+
+  // Draw Level Board
+  drawLevel();
+
+  // Draw Hearts (Live)
+  drawHeart();
 
   // End of translate
 
@@ -232,15 +230,6 @@ function draw() {
 
     // Default Play Menu
     drawPlayMenu();
-
-    // Play Button Hover
-    drawPlayMenuMouseHover();
-
-    // Settings Button Hover
-    drawSettingsMenuMouseHover();
-
-    // Tutorial Button Hover
-    tutorialButtonHover();
   }
 
   // ---------- PAUSE MENU ----------
@@ -248,15 +237,6 @@ function draw() {
   if (gameState == 2) {
     //Default Pause Menu
     pauseMenuDefault();
-
-    // Resume Button Mouse Hover
-    resumeMouseHover();
-
-    // New Game Button Mouse Hover
-    newGameMouseHover();
-
-    // Settings Menu Mouse Hover
-    settingsMouseHover();
   }
 
   // ---------- GAME OVER MENU ----------
@@ -280,7 +260,7 @@ function draw() {
       }
     }
 
-    //DIFFICULTY MEDIUM
+    // Difficulty Medium
     else if ((difficulty = "medium")) {
       // If difficulty is medium then will restart
 
@@ -350,28 +330,16 @@ function draw() {
 
     // Character Turning Left
     if (isLeft) {
-      if (police.position.x > width * 0.2) {
-        // to implement side scrolling so that when the character is almost to the end of the screen, the camera will go the left
-
-        police.position.x -= police.speed; // Move the Character to the Left
-      } else {
-        scrollPos += police.speed; // The Camera will Move to the Right
-      }
+      police.position.x -= police.speed; // Move the Character to the Left
     }
 
     // Character Turning Right
     else if (isRight) {
-      if (police.position.x < width * 0.8) {
-        // if camera is almost at the corner, it will move the
-
-        police.position.x += police.speed; // Move the Character to the Right
-      } else {
-        scrollPos -= police.speed; // Move the camera to the left
-      }
+      police.position.x += police.speed; // Move the Character to
     }
   }
 
-  // ---------- NEW GAME RESET ----------
+  // ---------- New Game Reset ----------
 
   if (gameState == 0) {
     if (lives < 3) {
@@ -383,13 +351,13 @@ function draw() {
     if (difficulty == "hard") {
       lives = 1; // Character will only be given 1 live
     }
-
-    // //COIN RESET
-    // scoreBoard = 0;
   }
 
-  // Update the character x position
-  police_world = police.position.x - scrollPos;
+  // Infinite Lives
+
+  if (infinite) {
+    lives = 3;
+  }
 
   // Coordinate Value
   push();
@@ -550,7 +518,11 @@ function keyPressed() {
 
   // "C" Key Pressed
   if (keyCode == 67) {
-    level += 1;
+    if (level < 5) {
+      level += 1; // Will go to the next level
+    } else {
+      level = 1; // Will go back to level 1
+    }
     initialSetup();
   }
 
@@ -613,18 +585,28 @@ function mouseClicked() {
     ) {
       police.jumpPower = -15;
     }
-  }
 
-  // Speed
-  if (mouseX >= 900 && mouseX <= 955 && mouseY >= 495 && mouseY <= 505) {
-    police.speed = 5;
-  }
+    // Speed
+    if (mouseX >= 900 && mouseX <= 955 && mouseY >= 495 && mouseY <= 505) {
+      police.speed = 5;
+    }
 
-  if (mouseX >= 955 && mouseX <= 1010 && mouseY >= 495 && mouseY <= 505) {
-    police.speed = 8;
-  }
+    if (mouseX >= 955 && mouseX <= 1010 && mouseY >= 495 && mouseY <= 505) {
+      police.speed = 8;
+    }
 
-  if (mouseX >= 1010 && mouseX <= 1080 && mouseY >= 495 && mouseY <= 505) {
-    police.speed = 13;
+    if (mouseX >= 1010 && mouseX <= 1080 && mouseY >= 495 && mouseY <= 505) {
+      police.speed = 13;
+    }
+
+    // Infinite Lives
+
+    if (mouseX >= 870 && mouseX <= 968 && mouseY >= 270 && mouseY <= 320) {
+      infinite = true;
+    }
+
+    if (mouseX >= 970 && mouseX <= 1070 && (mouseY >= 270) & (mouseY <= 320)) {
+      infinite = false;
+    }
   }
 }

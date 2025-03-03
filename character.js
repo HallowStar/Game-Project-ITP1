@@ -1,7 +1,5 @@
 function characterTurnRight() {
-  //I created the character by myself based on what's in my head for the left, right, standing still & jump / fall animation
-
-  //CHARACTER TURN RIGHT ANIMATION
+  // Police Turning Right Animation
 
   //head
   push();
@@ -14,9 +12,9 @@ function characterTurnRight() {
 
   if (police.position.y <= 560 && !isFall) {
     if (police.legDeg >= 55) {
-      police.legDirection = -2;
+      police.legDirection = -2; // will rotate the leg
     } else if (police.legDeg <= -55) {
-      police.legDirection = 2;
+      police.legDirection = 2; // will rotate the leg
     }
 
     police.legDeg += police.legDirection;
@@ -91,12 +89,13 @@ function characterTurnRight() {
   pop();
 }
 
+// Police Turning Left Animation
+
 function characterTurnLeft() {
-  //CHARACTER TURN LEFT ANIMATION
-  //head
   push();
   stroke(0);
-  //head
+
+  // Head
   fill(255, 228, 196);
   ellipse(police.position.x, police.position.y - 55, 30);
 
@@ -109,7 +108,7 @@ function characterTurnLeft() {
 
     police.legDeg += police.legDirection;
 
-    //left leg
+    // Left leg
     push();
     translate(police.position.x, police.position.y);
     rotate(radians(police.legDeg));
@@ -117,7 +116,7 @@ function characterTurnLeft() {
     rect(-5, -5, 11, 18, 0, 0, 5, 5);
     pop();
 
-    //right leg
+    // Right leg
     push();
     translate(police.position.x, police.position.y);
     rotate(radians(-police.legDeg));
@@ -126,10 +125,11 @@ function characterTurnLeft() {
     pop();
   }
 
-  //body
+  // Body
   fill(70, 130, 180);
   rect(police.position.x - 15, police.position.y - 43, 30, 40, 10);
-  //eye & mouth
+
+  // Eye & Mouth
   push();
   fill(0);
   rect(police.position.x - 9, police.position.y - 59, 7, 3);
@@ -138,10 +138,11 @@ function characterTurnLeft() {
   point(police.position.x - 8, police.position.y + -50);
   pop();
 
-  //shirt
+  // Shirt
   push();
   stroke(0);
   strokeWeight(1);
+
   line(
     police.position.x - 13,
     police.position.y - 33,
@@ -162,7 +163,7 @@ function characterTurnLeft() {
   );
   pop();
 
-  //hand
+  // Hand
   push();
   fill(17, 34, 85);
   rect(police.position.x - 5, police.position.y - 34, 8, 15, 5, 5, 0, 0);
@@ -170,7 +171,7 @@ function characterTurnLeft() {
   rect(police.position.x - 4, police.position.y - 19, 6, 9, 0, 0, 5, 5);
   pop();
 
-  //hat
+  // Hat
   fill(70, 130, 180);
   rect(police.position.x - 15, police.position.y - 70, 23, 5, 0, 9, 9, 1);
   fill(17, 34, 85);
@@ -178,42 +179,51 @@ function characterTurnLeft() {
   pop();
 }
 
+// Police Jump or Fall Animation
+
 function characterJumpOrFall() {
-  //CHARACTER JUMP / FALL ANIMATION
   push();
+
   fill(0);
   stroke(0);
-  //feet
+
+  // Feet
   rect(police.position.x - 10, police.position.y, 8, 15, 5);
   rect(police.position.x + 3, police.position.y, 8, 15, 5);
 
-  //head
+  // Head
   fill(255, 228, 196);
   ellipse(police.position.x, police.position.y - 48, 30);
-  //body
+
+  // Body
   fill(70, 130, 180);
   rect(police.position.x - 15, police.position.y - 35, 30, 40, 10);
-  //hat
+
+  // Hat
   push();
   fill(17, 34, 85);
   rect(police.position.x - 14, police.position.y - 67, 28, 5, 5);
   pop();
+
   rect(police.position.x - 9, police.position.y - 63, 18, 5, 5);
-  //eye
+
+  // Eye
   fill(0);
   rect(police.position.x - 7, police.position.y - 53, 5, 3);
   rect(police.position.x + 3, police.position.y - 53, 5, 3);
 
-  //mouth
+  // Mouth
   push();
   stroke(0);
   strokeWeight(3);
   point(police.position.x + 3, police.position.y - 45);
   pop();
-  //shirt
+
+  // Shirt
   push();
   stroke(0);
   strokeWeight(1);
+
   line(
     police.position.x - 13,
     police.position.y - 27,
@@ -233,12 +243,13 @@ function characterJumpOrFall() {
     police.position.y - 5
   );
   pop();
+
   fill(216, 191, 216);
   ellipse(police.position.x, police.position.y - 27, 5);
   ellipse(police.position.x, police.position.y - 16, 5);
   ellipse(police.position.x, police.position.y - 5, 5);
 
-  //hand
+  // Hand
 
   push();
   translate(police.position.x - 25, police.position.y - 39); // Move to hand center (adjusting for hand's dimensions)
@@ -257,44 +268,52 @@ function characterJumpOrFall() {
   fill(17, 34, 85);
   rect(-4, 7, 8, 15, 0, 0, 5, 5);
   pop();
+
   pop();
 }
 
+// Police Standing Still
 function characterStandingStill() {
-  //CHARACTER STANDING STILL ANIMATION
   push();
+
   fill(0);
   stroke(0);
   rect(police.position.x - 10, police.position.y - 2, 8, 15, 5);
   rect(police.position.x + 3, police.position.y - 2, 8, 15, 5);
 
-  //head
+  // Head
   fill(255, 228, 196);
   ellipse(police.position.x, police.position.y - 48, 30);
-  //body
+
+  // Body
   fill(70, 130, 180);
   rect(police.position.x - 15, police.position.y - 35, 30, 40, 10);
-  //hat
+
+  // Hat
   push();
   fill(17, 34, 85);
   rect(police.position.x - 14, police.position.y - 67, 28, 5, 5);
   pop();
+
   rect(police.position.x - 9, police.position.y - 63, 18, 5, 5);
-  //eye
+
+  // Eye
   fill(0);
   rect(police.position.x - 7, police.position.y - 53, 5, 3);
   rect(police.position.x + 3, police.position.y - 53, 5, 3);
 
-  //mouth
+  // Mouth
   push();
   stroke(0);
   strokeWeight(3);
   point(police.position.x + 3, police.position.y + -45);
   pop();
-  //shirt
+
+  //Shirt
   push();
   stroke(0);
   strokeWeight(1);
+
   line(
     police.position.x - 13,
     police.position.y - 27,
@@ -314,39 +333,44 @@ function characterStandingStill() {
     police.position.y - 5
   );
   pop();
+
   fill(216, 191, 216);
   ellipse(police.position.x, police.position.y - 27, 5);
   ellipse(police.position.x, police.position.y - 16, 5);
   ellipse(police.position.x, police.position.y - 5, 5);
 
-  //hand
+  // Hand
   push();
   fill(17, 34, 85);
   rect(police.position.x - 17, police.position.y - 34, 8, 15, 5, 0, 0, 0);
   fill(255, 228, 196);
   rect(police.position.x - 16, police.position.y - 19, 6, 9, 0, 0, 5, 5);
   pop();
+
   push();
   fill(17, 34, 85);
   rect(police.position.x + 10, police.position.y - 34, 8, 15, 0, 5, 0, 0);
   fill(255, 228, 196);
   rect(police.position.x + 11.5, police.position.y - 19, 6, 9, 0, 0, 5, 5);
   pop();
+
   pop();
 }
 
+// Police Falling Left Animation
 function characterFallingLeft() {
-  //CHARACTER FALLING LEFT ANIMATION
-  // add your jumping-left code
   push();
+
   stroke(0);
+
   fill(255, 228, 196);
   ellipse(police.position.x, police.position.y - 55, 30);
 
-  //body
+  // Body
   fill(70, 130, 180);
   rect(police.position.x - 15, police.position.y - 43, 30, 40, 10);
-  //eye & mouth
+
+  // Eye & Mouth
   push();
   fill(0);
   rect(police.position.x - 9, police.position.y - 59, 7, 3);
@@ -355,10 +379,11 @@ function characterFallingLeft() {
   point(police.position.x - 8, police.position.y - 50);
   pop();
 
-  //body
+  // Body
   push();
   stroke(0);
   strokeWeight(1);
+
   line(
     police.position.x - 13,
     police.position.y - 33,
@@ -379,13 +404,14 @@ function characterFallingLeft() {
   );
   pop();
 
-  //hand
+  // Hand
   push();
   translate(police.position.x + 3, police.position.y - 20);
   rotate(radians(180));
   fill(17, 34, 85);
   rect(0, 0, 8, 15, 5, 5, 0, 0);
   pop();
+
   push();
   translate(police.position.x + 2, police.position.y - 35);
   rotate(radians(180));
@@ -393,13 +419,13 @@ function characterFallingLeft() {
   rect(0, 0, 6, 15, 0, 0, 5, 5);
   pop();
 
-  // right leg
+  // Right Leg
   push();
   fill(0);
   rect(police.position.x - 6, police.position.y - 5, 11, 15, 0, 0, 5, 5);
   pop();
 
-  //hat
+  // Hat
   fill(70, 130, 180);
   rect(police.position.x - 15, police.position.y - 70, 23, 5, 0, 9, 9, 1);
   fill(17, 34, 85);
@@ -407,20 +433,22 @@ function characterFallingLeft() {
   pop();
 }
 
+// Police Falling Right Animation
 function characterFallingRight() {
-  //CHARACTER FALLING RIGHT ANIMATION
-  // add your jumping-right code
-  //head
+  // Head
   push();
+
   stroke(0);
-  //head
+
+  // Head
   fill(255, 228, 196);
   ellipse(police.position.x, police.position.y - 55, 30);
 
-  //body
+  // Body
   fill(70, 130, 180);
   rect(police.position.x - 15, police.position.y - 43, 30, 40, 10);
-  //eye & mouth
+
+  // Eye & Mouth
   push();
   fill(0);
   rect(police.position.x + 3, police.position.y - 59, 7, 3);
@@ -429,7 +457,7 @@ function characterFallingRight() {
   point(police.position.x + 8, police.position.y - 50);
   pop();
 
-  //body
+  // Body
   push();
   stroke(0);
   strokeWeight(1);
@@ -453,13 +481,14 @@ function characterFallingRight() {
   );
   pop();
 
-  //hand
+  // Hand
   push();
   translate(police.position.x + 3, police.position.y - 20);
   rotate(radians(180));
   fill(17, 34, 85);
   rect(0, 0, 8, 15, 5, 5, 0, 0);
   pop();
+
   push();
   translate(police.position.x + 2, police.position.y - 35);
   rotate(radians(180));
@@ -467,11 +496,11 @@ function characterFallingRight() {
   rect(0, 0, 6, 15, 0, 0, 5, 5);
   pop();
 
-  //feet
+  // Feet
   fill(0);
   rect(police.position.x - 6, police.position.y - 5, 11, 15, 0, 0, 5, 5);
 
-  //hat
+  // Hat
   fill(70, 130, 180);
   rect(police.position.x - 7, police.position.y - 70, 23, 5, 0, 9, 9, 1);
   fill(17, 34, 85);
@@ -479,8 +508,26 @@ function characterFallingRight() {
   pop();
 }
 
-function enemyTurnRight(x, y, handDeg, handD) {
-  //face & hat
+// Enemy Turning Right Animation
+function enemyTurnRight(x, y, handDeg, type) {
+  let bodyColor, handColor, legColor;
+
+  // Type of Enemy
+  if (type == "red") {
+    bodyColor = [254, 115, 0];
+    handColor = [255, 141, 30];
+    legColor = [230, 115, 0];
+  } else if (type == "blue") {
+    bodyColor = [0, 139, 139];
+    handColor = [0, 139, 139];
+    legColor = [0, 139, 139];
+  } else {
+    bodyColor = [105, 105, 105];
+    handColor = [105, 105, 105];
+    legColor = [105, 105, 105];
+  }
+
+  // Face & Hat
   push();
   fill(255, 178, 102);
   rect(x - 13, y - 55, 26, 20, 0, 0, 25, 25);
@@ -489,7 +536,7 @@ function enemyTurnRight(x, y, handDeg, handD) {
   curveVertex();
   pop();
 
-  //eye
+  // Eye
   ellipse(x - 4, y - 49, 8);
   fill(255);
   ellipse(x - 3, y - 49, 2);
@@ -499,8 +546,9 @@ function enemyTurnRight(x, y, handDeg, handD) {
   fill(255);
   ellipse(x + 6, y - 49, 2);
 
-  //mouth
+  // Mouth
   push();
+
   stroke(0);
   fill(0);
   beginShape();
@@ -509,11 +557,12 @@ function enemyTurnRight(x, y, handDeg, handD) {
   vertex(x + 3, y - 39);
   vertex(x, y - 50);
   endShape();
+
   pop();
 
-  //right hand
+  // Right hand
   push();
-  fill(255, 141, 30);
+  fill(bodyColor);
   translate(x + 5, y - 33);
   rotate(radians(-handDeg + 30));
   rect(0, 0, 20, 7, 3, 3, 0, 0);
@@ -521,36 +570,36 @@ function enemyTurnRight(x, y, handDeg, handD) {
   rect(18, 0, 5, 7, 0, 3, 3, 0);
   pop();
 
-  // leg
+  // Leg
   push();
-  fill(230, 115, 0);
+  fill(legColor);
   rect(x - 8, y - 5, 8, 20, 5, 5);
   fill(0);
   rect(x - 8, y + 10, 8, 5, 0, 0, 5, 5);
-  fill(230, 115, 0);
 
+  fill(legColor);
   rect(x + 2, y - 5, 8, 20, 5, 5);
   fill(0);
   rect(x + 2, y + 10, 8, 5, 0, 0, 5, 5);
 
   pop();
 
-  //body
+  // Body
   push();
-  fill(254, 115, 0);
+
+  fill(bodyColor);
   rect(x - 12, y - 35, 25, 35, 9, 9, 9, 9);
   pop();
 
-  //shirt
+  // Shirt
   fill(0);
   rect(x - 8, y - 30, 20, 5);
   rect(x - 8, y - 20, 20, 5);
   rect(x - 8, y - 10, 20, 5);
 
-  // left hand
-
+  // Left hand
   push();
-  fill(255, 141, 30);
+  fill(handColor);
   translate(x - 10, y - 34);
   rotate(radians(handDeg));
   rect(0, 0, 7, 20, 3, 3, 0, 0);
@@ -559,8 +608,25 @@ function enemyTurnRight(x, y, handDeg, handD) {
   pop();
 }
 
-function enemyTurnLeft(x, y, handDeg, handD) {
-  //face & hat
+// Enemy Turning Left Animation
+function enemyTurnLeft(x, y, handDeg, type) {
+  let bodyColor, handColor, legColor;
+
+  if (type == "red") {
+    bodyColor = [254, 115, 0];
+    handColor = [255, 141, 30];
+    legColor = [230, 115, 0];
+  } else if (type == "blue") {
+    bodyColor = [0, 139, 139];
+    handColor = [0, 139, 139];
+    legColor = [0, 139, 139];
+  } else {
+    bodyColor = [105, 105, 105];
+    handColor = [105, 105, 105];
+    legColor = [105, 105, 105];
+  }
+
+  // Face & hat
   push();
   fill(255, 178, 102);
   rect(x - 13, y - 55, 26, 20, 0, 0, 25, 25);
@@ -569,7 +635,7 @@ function enemyTurnLeft(x, y, handDeg, handD) {
   curveVertex();
   pop();
 
-  //eye
+  // Eye
   ellipse(x - 4, y - 49, 8);
   fill(255);
   ellipse(x - 5, y - 49, 2);
@@ -579,7 +645,7 @@ function enemyTurnLeft(x, y, handDeg, handD) {
   fill(255);
   ellipse(x + 5, y - 49, 2);
 
-  //mouth
+  // Mouth
   push();
   stroke(0);
   fill(0);
@@ -591,9 +657,9 @@ function enemyTurnLeft(x, y, handDeg, handD) {
   endShape();
   pop();
 
-  //left hand (from right hand)
+  // Left hand (from right hand)
   push();
-  fill(255, 141, 30);
+  fill(handColor);
   translate(x - 3, y - 33);
   rotate(radians(-handDeg));
   rect(0, 0, -20, 7);
@@ -601,36 +667,36 @@ function enemyTurnLeft(x, y, handDeg, handD) {
   rect(-23, 0, 5, 7, 5);
   pop();
 
-  // leg
+  // Leg
   push();
-  fill(230, 115, 0);
+
+  fill(legColor);
   rect(x - 8, y - 5, 8, 20, 5, 5);
   fill(0);
   rect(x - 8, y + 10, 8, 5, 0, 0, 5, 5);
-  fill(230, 115, 0);
 
+  fill(legColor);
   rect(x + 2, y - 5, 8, 20, 5, 5);
   fill(0);
   rect(x + 2, y + 10, 8, 5, 0, 0, 5, 5);
 
   pop();
 
-  //body
+  // Body
   push();
-  fill(254, 115, 0);
+  fill(bodyColor);
   rect(x - 12, y - 35, 25, 35, 9, 9, 9, 9);
   pop();
 
-  //shirt
+  // Shirt
   fill(0);
   rect(x - 10, y - 30, 20, 5);
   rect(x - 10, y - 20, 20, 5);
   rect(x - 10, y - 10, 20, 5);
 
-  // right hand
-
+  // Right Hand
   push();
-  fill(255, 141, 30);
+  fill(handColor);
   translate(x + 7, y - 32);
   rotate(radians(handDeg));
   rect(0, 0, 7, 20, 3, 3, 0, 0);

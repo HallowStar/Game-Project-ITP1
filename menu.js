@@ -1,3 +1,4 @@
+// Dark Background
 function drawDarkBackground() {
   //DARK BACKGROUND
   push();
@@ -12,88 +13,47 @@ function drawDarkBackground() {
   pop();
 }
 
-//PLAY MENU SCREEN
-
+// Play & Resume Menu Setup
 function playMenuButton() {
-  //PLAY & RESUME MENU SETUP
   play_menu = {
     x: width / 2 - 150,
     y: height / 2 - 100,
-    color: 255,
   };
 
   settings_menu = {
     x: width / 2 - 150,
     y: height / 2 + 50,
-    color: 0,
   };
 
   //menu
   restart_menu = {
     x: width / 2 - 150,
     y: height / 2 - 40,
-    color: 255,
   };
 }
 
+// Resume Menu Button Setup
 function resumeMenuButton() {
   resume_menu = {
     x: width / 2 - 150,
     y: height / 2 - 200,
-    color: 255,
   };
 
   play_again = {
     x: width / 2 - 150,
     y: height / 2 - 200,
-    color: 255,
   };
 
   settings_pause = {
     x: width / 2 - 150,
     y: height / 2 + 50,
-    color: 0,
   };
 }
 
+// --------- Play Menu Button ---------
+
 function drawPlayMenu() {
-  //DEFAULT PAUSE SCREEN
-  //I develop a new feature to my game that is not implemented from Coursera which is a play menu at the start of the game which I made using the codes and methods that I learned from Coursera. I made a play game menu and settings menu (which is not done yet).
-
-  push();
-  stroke(play_menu.color);
-  fill(play_menu.color - 255);
-  rect(play_menu.x, play_menu.y, 300, 100);
-  fill(play_menu.color);
-  textSize(20);
-  text("Play Game", play_menu.x + 100, play_menu.y + 57);
-  pop();
-
-  //settings
-  push();
-  stroke(settings_menu.color + 255);
-  fill(settings_menu.color);
-  rect(settings_menu.x, settings_menu.y, 300, 100);
-  fill(settings_menu.color + 255);
-  textSize(20);
-  textAlign(CENTER);
-  text("Settings", width / 2 - 3, height / 2 + 105);
-  pop();
-
-  //tutorial
-  push();
-  stroke(settings_menu.color + 255);
-  fill(settings_menu.color);
-  rect(settings_menu.x, settings_menu.y + 150, 300, 100);
-  fill(settings_menu.color + 255);
-  textSize(20);
-  textAlign(CENTER);
-  text("Tutorial", width / 2 - 3, height / 2 + 255);
-  pop();
-}
-
-function drawPlayMenuMouseHover() {
-  //Use the hover feature learned from Coursera and implemented where if the mouse is hovering the button the it will turn white. For this instance, it could be for the play meny or the settings menu
+  let playColor = 255;
 
   if (
     mouseX >= play_menu.x &&
@@ -101,132 +61,143 @@ function drawPlayMenuMouseHover() {
     mouseY >= height / 2 - 100 &&
     mouseY <= play_menu.y + 100
   ) {
-    //play menu (white)
-    push();
-    stroke(play_menu.color - 255);
-    fill(play_menu.color);
-    rect(play_menu.x, play_menu.y, 300, 100);
-    fill(play_menu.color - 255);
-    textSize(20);
-    text("Play Game", width / 2 - 50, height / 2 - 43);
-    pop();
+    playColor = 0; // Play Menu Hover (white)
+  } else {
+    playColor = 255; // default color
   }
-}
 
-function drawSettingsMenuMouseHover() {
-  //settings black
+  push();
+  stroke(playColor);
+  fill(255 - playColor);
+  rect(play_menu.x, play_menu.y, 300, 100);
+  fill(playColor);
+  textSize(20);
+  text("Play Game", play_menu.x + 100, play_menu.y + 57);
+  pop();
+
+  // --------- Settings Button ---------
+  let settingsColor = 0;
+
   if (
     mouseX >= settings_menu.x &&
     mouseX <= settings_menu.x + 300 &&
     mouseY >= settings_menu.y &&
     mouseY <= settings_menu.y + 100
   ) {
-    push();
-    stroke(settings_menu.color);
-    fill(settings_menu.color + 255);
-    rect(settings_menu.x, settings_menu.y, 300, 100);
-    fill(settings_menu.color);
-    textSize(20);
-    textAlign(CENTER);
-    text("Settings", width / 2 - 3, height / 2 + 105);
-    pop();
+    settingsColor = 255; // Settings Button Hover
+  } else {
+    settingsColor = 0; // Default Settings
   }
-}
 
-function tutorialButtonHover() {
+  push();
+  stroke(255 - settingsColor);
+  fill(settingsColor);
+  rect(settings_menu.x, settings_menu.y, 300, 100);
+  fill(255 - settingsColor);
+  textSize(20);
+  textAlign(CENTER);
+  text("Settings", width / 2 - 3, height / 2 + 105);
+  pop();
+
+  // --------- Tutorial Button ---------
+
+  let tutorialColor = 0;
+
   if (
     mouseX >= settings_menu.x &&
     mouseX <= settings_menu.x + 300 &&
     mouseY >= settings_menu.y + 150 &&
     mouseY <= settings_menu.y + 250
   ) {
-    //tutorial
-    push();
-    stroke(settings_menu.color);
-    fill(settings_menu.color + 255);
-    rect(settings_menu.x, settings_menu.y + 150, 300, 100);
-    fill(settings_menu.color);
-    textSize(20);
-    textAlign(CENTER);
-    text("Tutorial", width / 2 - 3, height / 2 + 255);
-    pop();
+    tutorialColor = 255; // Tutorial Mouse Hover
+  } else {
+    tutorialColor = 0; // Default Mouse Hover
   }
+
+  push();
+  stroke(255 - tutorialColor);
+  fill(tutorialColor);
+  rect(settings_menu.x, settings_menu.y + 150, 300, 100);
+  fill(255 - tutorialColor);
+  textSize(20);
+  textAlign(CENTER);
+  text("Tutorial", width / 2 - 3, height / 2 + 255);
+  pop();
 }
 
-// ------- END OF PLAY MENU SCREEN
-
-//GAME OVER MENU SCREEN
+// -------- Game Over Menu Screen (Game State 6) --------
 
 function restartMenu() {
-  // DARK BACKGROUND
+  // Dark Background
   background(0, 0, 0, 200);
 
-  //BACKGROUND
+  // Background
   push();
   fill(255, 0, 0, 150);
   rect(0, 210, width, 180);
   pop();
 
-  //GAME OVER TEXT
+  //  --------- Game Over Text ---------
   push();
+
   textSize(80);
   textAlign(CENTER);
   push();
+
   stroke(0);
   strokeWeight(3);
   text("GAME OVER", width / 2, height / 2 - 100);
   pop();
+
   pop();
 
-  //SOUND
+  // Sound
   if (gameOver) {
-    gameOverSound.play();
+    gameOverSound.play(); // game over sound
     gameOver = false; // Prevents replay
   }
 
-  //RESTART BUTTON (DARK)
-  push();
-  stroke(restart_menu.color);
-  fill(restart_menu.color - 255);
-  rect(restart_menu.x, restart_menu.y + 200, 300, 100);
-  fill(restart_menu.color);
-  textSize(20);
-  text("Restart Game", restart_menu.x + 85, restart_menu.y + 255);
-  textSize(30);
-  text("Score : " + scoreBoard, width / 2 - 60, height / 2 + 40);
-  pop();
+  // --------- Restart Button ---------
 
-  //RESTART BUTTON (WHITE)
+  let restartColor = 255;
+
   if (
     mouseX >= restart_menu.x &&
     mouseX <= restart_menu.x + 300 &&
     mouseY >= restart_menu.y + 200 &&
     mouseY <= restart_menu.y + 300
   ) {
-    push();
-    stroke(restart_menu.color - 255);
-    fill(restart_menu.color);
-    rect(restart_menu.x, restart_menu.y + 200, 300, 100);
-    fill(restart_menu.color - 255);
-    textSize(20);
-    text("Restart Game", restart_menu.x + 85, restart_menu.y + 255);
-    pop();
+    restartColor = 0;
+  } else {
+    restartColor = 255;
   }
+
+  push();
+  stroke(restartColor);
+  fill(255 - restartColor);
+  rect(restart_menu.x, restart_menu.y + 200, 300, 100);
+  fill(restartColor);
+  textSize(20);
+  text("Restart Game", restart_menu.x + 85, restart_menu.y + 255);
+  textSize(30);
+  fill(255);
+  text(" Nice Try !!", width / 2 - 60, height / 2 + 40);
+  pop();
 }
 
-//NEXT LEVEL MENU
+// --------- Next Level Menu (Game State 5) ---------
 
 function nextLevel() {
-  // DARK BACKGROUND
+  // Dark Background
   background(0, 0, 0, 200);
 
-  //BACKGROUND
+  // Background
   push();
   fill(255, 255, 255, 150);
   rect(0, 210, width, 180);
   pop();
 
-  //GAME OVER TEXT
+  // Game Over Text
   push();
   textSize(80);
   textAlign(CENTER);
@@ -237,41 +208,38 @@ function nextLevel() {
   pop();
   pop();
 
-  //RESTART BUTTON (DARK)
-  push();
-  stroke(restart_menu.color);
-  fill(restart_menu.color - 255);
-  rect(restart_menu.x, restart_menu.y + 50, 300, 100);
-  fill(restart_menu.color);
-  textSize(20);
-  text("Next Level", restart_menu.x + 100, restart_menu.y + 105);
-  pop();
+  // --------- Restart Button ---------
 
-  //RESTART BUTTON (WHITE)
+  let restartColor = 255;
+
   if (
     mouseX >= restart_menu.x &&
     mouseX <= restart_menu.x + 300 &&
     mouseY >= restart_menu.y + 50 &&
     mouseY <= restart_menu.y + 150
   ) {
-    push();
-    stroke(restart_menu.color - 255);
-    fill(restart_menu.color);
-    rect(restart_menu.x, restart_menu.y + 50, 300, 100);
-    fill(restart_menu.color - 255);
-    textSize(20);
-    text("Next Level", restart_menu.x + 100, restart_menu.y + 105);
-    pop();
+    restartColor = 0;
+  } else {
+    restartColor = 255;
   }
+
+  push();
+  stroke(restartColor);
+  fill(255 - restartColor);
+  rect(restart_menu.x, restart_menu.y + 50, 300, 100);
+  fill(restartColor);
+  textSize(20);
+  text("Next Level", restart_menu.x + 100, restart_menu.y + 105);
+  pop();
 }
 
-// GAME WIN MENU
+// ----------- Game Win Menu (Game State 4) -----------
 
 function gameWin() {
-  // DARK BACKGROUND
+  // Dark Background
   background(0, 0, 0, 200);
 
-  //GAME OVER TEXT
+  // Game Over Text
   push();
 
   push();
@@ -296,144 +264,123 @@ function gameWin() {
   isFall = false;
 }
 
-//PAUSE MENU
+// ----------- Pause Menu (Game State 2) -----------
 
 function pauseMenuDefault() {
-  //DARK BACKGROUND
+  //Dark Background
   push();
   fill(0, 0, 0, 160);
   rect(0, 0, width, height);
   pop();
 
-  //Same like the play menu, I created the resume menu where if I click "Escape", it will open up the menu. This method is taught in Coursera (the "keyPressed" method)
+  // --------- Resume Game Button ---------
 
-  //RESUME MENU (DEFAULT)
-  push();
-  stroke(resume_menu.color);
-  fill(resume_menu.color - 255);
-  rect(resume_menu.x, resume_menu.y, 300, 100);
-  fill(resume_menu.color);
-  textSize(20);
-  text("Resume Game", resume_menu.x + 80, resume_menu.y + 57);
-  pop();
+  let resumeColor = 255;
 
-  //new game
-  push();
-  stroke(play_again.color);
-  fill(play_again.color - 255);
-  rect(play_again.x, play_again.y + 125, 300, 100);
-  fill(play_again.color);
-  textSize(20);
-  textAlign(CENTER);
-  text("New Game", width / 2 - 3, height / 2 - 19);
-  pop();
-
-  //settings
-  push();
-  stroke(settings_menu.color + 255);
-  fill(settings_menu.color);
-  rect(settings_menu.x, settings_menu.y, 300, 100);
-  fill(settings_menu.color + 255);
-  textSize(20);
-  textAlign(CENTER);
-  text("Settings", width / 2 - 3, height / 2 + 105);
-  pop();
-}
-
-function resumeMouseHover() {
-  //RESUME menu white
   if (
     mouseX >= resume_menu.x &&
     mouseX <= resume_menu.x + 300 &&
     mouseY >= resume_menu.y &&
     mouseY <= resume_menu.y + 100
   ) {
-    push();
-    stroke(resume_menu.color);
-    fill(resume_menu.color);
-    rect(resume_menu.x, resume_menu.y, 300, 100);
-    fill(resume_menu.color - 255);
-    textSize(20);
-    text("Resume Game", resume_menu.x + 80, resume_menu.y + 57);
-    pop();
+    resumeColor = 0; // Hover
+  } else {
+    resumeColor = 255; // Default
   }
-}
 
-function newGameMouseHover() {
+  push();
+  stroke(resumeColor);
+  fill(255 - resumeColor);
+  rect(resume_menu.x, resume_menu.y, 300, 100);
+  fill(resumeColor);
+  textSize(20);
+  text("Resume Game", resume_menu.x + 80, resume_menu.y + 57);
+  pop();
+
+  // --------- New Game Button ---------
+
+  let newColor = 255;
+
   if (
     mouseX >= play_again.x &&
     mouseX <= play_again.x + 300 &&
     mouseY >= play_again.y + 125 &&
     mouseY <= play_again.y + 225
   ) {
-    //new game white
-    push();
-    stroke(play_again.color);
-    fill(play_again.color);
-    rect(play_again.x, play_again.y + 125, 300, 100);
-    fill(play_again.color - 255);
-    textSize(20);
-    textAlign(CENTER);
-    text("New Game", width / 2 - 3, height / 2 - 19);
-    pop();
+    newColor = 0;
+  } else {
+    newColor = 255;
   }
-}
 
-function settingsMouseHover() {
-  //settings white
+  push();
+  stroke(newColor);
+  fill(255 - newColor);
+  rect(play_again.x, play_again.y + 125, 300, 100);
+  fill(newColor);
+  textSize(20);
+  textAlign(CENTER);
+  text("New Game", width / 2 - 3, height / 2 - 19);
+  pop();
+
+  // --------- Settings Button ---------
+
+  let settingColor = 0;
+
   if (
     mouseX >= settings_pause.x &&
     mouseX <= settings_pause.x + 300 &&
     mouseY >= settings_pause.y &&
     mouseY <= settings_pause.y + 100
   ) {
-    push();
-    stroke(settings_menu.color + 255);
-    fill(settings_menu.color + 255);
-    rect(settings_menu.x, settings_menu.y, 300, 100);
-    fill(settings_menu.color);
-    textSize(20);
-    textAlign(CENTER);
-    text("Settings", width / 2 - 3, height / 2 + 105);
-    pop();
+    settingColor = 255; // Hover
+  } else {
+    settingColor = 0; // Default
   }
+
+  push();
+  stroke(255 - settingColor);
+  fill(settingColor);
+  rect(settings_menu.x, settings_menu.y, 300, 100);
+  fill(255 - settingColor);
+  textSize(20);
+  textAlign(CENTER);
+  text("Settings", width / 2 - 3, height / 2 + 105);
+  pop();
 }
 
-//SETTINGS
+// ------------ Settings Menu (Game State 7) ------------
 
 function settingsMenu() {
   push();
 
-  // DARK OVERLAY
+  // Dark Background
   push();
   fill(0, 0, 0, 200);
   rect(0, 0, width, height);
   pop();
 
-  //BACK MENU
+  // ------ Back Menu ------
+
+  let backColor = 255;
+
+  if (mouseX >= 50 && mouseX <= 200 && mouseY >= 50 && mouseY <= 120) {
+    backColor = 0;
+  } else {
+    backColor = 255;
+  }
+
   push();
-  fill(0);
+  fill(255 - backColor);
   stroke(255);
   rect(50, 50, 150, 70);
-  fill(255);
+  fill(backColor);
   textSize(25);
   text("Back", 95, 95);
   pop();
 
-  if (mouseX >= 50 && mouseX <= 200 && mouseY >= 50 && mouseY <= 120) {
-    push();
-    fill(255);
-    stroke(0);
-    rect(50, 50, 150, 70);
-    fill(0);
-    textSize(25);
-    text("Back", 95, 95);
-    pop();
-  }
+  // --------------- Difficulty  ---------------
 
-  // --------------- DIFFICULTY  ---------------
-
-  // DIFFICULTY TEXT
+  // Difficulty Text
   textFont("Times New Roman");
   push();
   textSize(30);
@@ -441,7 +388,7 @@ function settingsMenu() {
   text("Difficulty Level", 200, 200);
   pop();
 
-  // EASY BUTTON
+  // Easy Button
   if (
     difficulty == "easy" ||
     (mouseX >= 700 && mouseX <= 800 && mouseY >= 170 && mouseY <= 220)
@@ -465,7 +412,7 @@ function settingsMenu() {
     pop();
   }
 
-  // MEDIUM BUTTON
+  // Medium Button
   if (
     difficulty === "medium" ||
     (mouseX >= 850 && mouseX <= 985 && mouseY >= 170 && mouseY <= 220)
@@ -491,7 +438,7 @@ function settingsMenu() {
     pop();
   }
 
-  // HARD BUTTON
+  // Hard Button
   if (
     difficulty === "hard" ||
     (mouseX >= 1040 && mouseX <= 1140 && mouseY >= 170 && mouseY <= 220)
@@ -515,17 +462,62 @@ function settingsMenu() {
 
   pop();
 
-  //CONDITION
+  // Infinite Lives
   push();
   textFont("Times New Roman");
   textSize(30);
   fill(255);
-  text("Condition", 200, 300);
+  text("Infinite Lives", 200, 300);
   pop();
 
-  // -------- JUMP POWER --------
+  // On Sign
+  let onColor = 0;
 
-  // JUMP POWER TEXT
+  if (
+    (mouseX >= 870 && mouseX <= 968 && mouseY >= 270 && mouseY <= 320) ||
+    infinite
+  ) {
+    onColor = 255; // Hover
+  } else {
+    onColor = 0; // Default
+  }
+
+  push();
+  fill(onColor);
+  stroke(255 - onColor);
+  rect(870, 270, 100, 50);
+  fill(255 - onColor);
+  textFont("Times New Roman");
+  textSize(25);
+  text("On", 903, 305);
+  pop();
+
+  //Off Sign
+
+  let offColor = 0;
+
+  if (
+    (mouseX >= 970 && mouseX <= 1070 && (mouseY >= 270) & (mouseY <= 320)) ||
+    infinite == false
+  ) {
+    offColor = 255;
+  } else {
+    offColor = 0;
+  }
+
+  push();
+  fill(offColor);
+  stroke(255 - offColor);
+  rect(970, 270, 100, 50);
+  fill(255 - offColor);
+  textFont("Times New Roman");
+  textSize(25);
+  text("Off", 1000, 305);
+  pop();
+
+  // -------- Jump Power --------
+
+  // Jump Power Text
   push();
   textFont("Times New Roman");
   textSize(30);
@@ -533,8 +525,7 @@ function settingsMenu() {
   text("Jump Power", 200, 400);
   pop();
 
-  //
-
+  // Number
   push();
   stroke(255);
   fill(255);
@@ -544,14 +535,14 @@ function settingsMenu() {
   text("3", 1050, 385);
   pop();
 
-  //BAR (Black)
+  // Bar (Black)
   push();
   stroke(255);
   fill(0);
   rect(900, 395, 180, 10, 30);
   pop();
 
-  //FIRST LINE
+  // First Line
   if (
     (mouseX >= 900 && mouseX <= 955 && mouseY >= 395 && mouseY <= 405) ||
     police.jumpPower == -10
@@ -560,10 +551,9 @@ function settingsMenu() {
     fill(255);
     rect(900, 395, 55, 10, 30);
     pop();
-    // police.jumpPower = -10; //standard jump power for character
   }
 
-  //SECOND LINE
+  // Second Line
   if (
     (mouseX >= 955 && mouseX <= 1010 && mouseY >= 395 && mouseY <= 405) ||
     police.jumpPower == -12
@@ -583,16 +573,16 @@ function settingsMenu() {
     pop();
   }
 
-  // LINE
+  // Line
   push();
   stroke(255);
   strokeWeight(1);
   line(1200, 100, 1200, 800);
   pop();
 
-  //CHARACTER SPEED SETTINGS
+  // Character Speed Settings
 
-  // SPEED  TEXT
+  // Speed Text
   push();
   textFont("Times New Roman");
   textSize(30);
@@ -600,6 +590,7 @@ function settingsMenu() {
   text("Speed", 200, 500);
   pop();
 
+  // Number
   push();
   stroke(255);
   fill(255);
@@ -609,14 +600,14 @@ function settingsMenu() {
   text("3", 1050, 485);
   pop();
 
-  //BAR (Black)
+  // Bar (Black)
   push();
   stroke(255);
   fill(0);
   rect(900, 495, 180, 10, 30);
   pop();
 
-  //FIRST LINE
+  // First LINE
   if (
     (mouseX >= 900 && mouseX <= 955 && mouseY >= 495 && mouseY <= 505) ||
     police.speed == 5
@@ -625,10 +616,9 @@ function settingsMenu() {
     fill(255);
     rect(900, 495, 55, 10, 30);
     pop();
-    // police.jumpPower = -10; //standard jump power for character
   }
 
-  //SECOND LINE
+  // Second Line
   if (
     (mouseX >= 955 && mouseX <= 1010 && mouseY >= 495 && mouseY <= 505) ||
     police.speed == 8
@@ -638,6 +628,8 @@ function settingsMenu() {
     rect(900, 495, 110, 10, 30);
     pop();
   }
+
+  // Third Line
   if (
     (mouseX >= 1010 && mouseX <= 1080 && mouseY >= 495 && mouseY <= 505) ||
     police.speed == 13
@@ -648,7 +640,7 @@ function settingsMenu() {
     pop();
   }
 
-  //INSTRUCTIONS
+  // Instructions
   push();
   textSize(18);
   text("Easy : Restart at the same level & Score still the same", 1240, 120);
@@ -656,13 +648,14 @@ function settingsMenu() {
   text("Hard : One Live", 1240, 200);
   text("Jump Power : Increase Jump Power of Character", 1240, 240);
   text("Speed : Increase Speed of the Character", 1240, 280);
+  text("Infinite Lives : Have Infinite Lives", 1240, 320);
   pop();
 }
 
-//TUTORIAL MENU
+// Tutorial Menu
 
 function tutorialMenu() {
-  // DARK BACKGROUND
+  // Dark Backgroun
   push();
   fill(0, 0, 0, 230);
   rect(0, 0, width, height);
@@ -687,7 +680,7 @@ function tutorialMenu() {
   rect(50, 150, 500, 380);
   pop();
 
-  // CONTROLS
+  // Controls
   push();
   fill(255);
   stroke(255);
@@ -712,7 +705,7 @@ function tutorialMenu() {
 
   pop();
 
-  // --------- HOW TO PLAY ---------
+  //  How to Play
   push();
   fill(105);
   stroke(255);
@@ -731,7 +724,6 @@ function tutorialMenu() {
 
   push();
   fill(255);
-  // stroke(255);
   textSize(20);
 
   push();
@@ -740,7 +732,7 @@ function tutorialMenu() {
   text("Goal : ", 780, 190);
   pop();
 
-  //INSTRUCTIONS
+  // Instructions
 
   text("Save The City filled with Criminals", 890, 190);
   text("- A police is stranded and assigned to save the city.", 780, 230);
@@ -794,24 +786,22 @@ function tutorialMenu() {
 
   pop();
 
-  //BACK MENU
+  // Back Menu
+
+  let backColor = 0;
+
+  if (mouseX >= 50 && mouseX <= 200 && mouseY >= 700 && mouseY <= 770) {
+    backColor = 255;
+  } else {
+    backColor = 0;
+  }
+
   push();
-  fill(0);
-  stroke(255);
+  fill(backColor);
+  stroke(255 - backColor);
   rect(50, 700, 150, 70);
-  fill(255);
+  fill(255 - backColor);
   textSize(25);
   text("Back", 95, 745);
   pop();
-
-  if (mouseX >= 50 && mouseX <= 200 && mouseY >= 700 && mouseY <= 770) {
-    push();
-    fill(255);
-    stroke(0);
-    rect(50, 700, 150, 70);
-    fill(0);
-    textSize(25);
-    text("Back", 95, 745);
-    pop();
-  }
 }
