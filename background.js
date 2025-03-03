@@ -21,19 +21,8 @@ function initialSetup() {
 
   platforms = [];
 
-  platforms.push(createPlatform(200, 430, 200));
-  platforms.push(createPlatform(300, 330, 300));
-  platforms.push(createPlatform(850, 390, 200));
-  platforms.push(createPlatform(1200, 320, 100));
-  platforms.push(createPlatform(1800, 450, random(100, 500)));
-
   enemies = [];
-  enemies.push(createEnemies(210, 415, 100));
 
-  characterState = 0;
-  gameState = 0;
-  playState = 0;
-  scoreBoard = 0;
   scrollPos = 0;
   police_world = police.position.x;
 
@@ -43,24 +32,30 @@ function initialSetup() {
   isJump = false;
   isFall = false;
   hasDied = false;
-  gameOver = true;
-
-  //menu
-  restart_menu = {
-    x: width / 2 - 150,
-    y: height / 2 - 40,
-    color: 255,
-  };
 
   backgroundSetup();
-  movingObject();
+
+  if (level == 1) {
+    levelOne();
+  } else if (level == 2) {
+    gameState = 1;
+    levelTwo();
+  } else if (level == 3) {
+    gameState = 1;
+    levelThree();
+  } else if (level == 4) {
+    gameState = 1;
+    levelFour();
+  } else if (level == 5) {
+    levelFive();
+  }
 }
 
 function backgroundSetup() {
   noStroke();
   //The objects and arrays I used in the setup function are the codes that I learned from coursera
 
-  //MOON
+  // ------------ MOON ------------
   moon = {
     x: 1620,
     y: 70,
@@ -69,28 +64,27 @@ function backgroundSetup() {
   // ------------ BUILDING ------------
 
   // --- SPIKY BUILDING
-  building = {
-    y: 100,
-    color: random(0, 255),
-  };
+  buildings = [];
+
+  buildings.push(createBuilding(1000, 100, random(0, 255)));
+  buildings.push(createBuilding(3200, 100, random(0, 255)));
+
+  // NORMAL BUILDING
 
   building_x = [1000, 3200];
 
-  // --- NORMAL BUILDING
-  n_building = {
-    y: 0,
-    color: random(0, 255),
-  };
+  n_buildings = [];
+  n_buildings.push(createNormalBuilding(-1200, 0));
+  n_buildings.push(createNormalBuilding(-600, 0));
+  n_buildings.push(createNormalBuilding(1800, 0));
+  n_buildings.push(createNormalBuilding(4000, 0));
 
-  n_building_x = [-1200, -600, 1800, 4000];
+  //FALLEN BUILDING
 
-  //fallen building
-  f_building = {
-    y: 150,
-    color: random(0, 255),
-  };
+  f_buildings = [];
 
-  f_building_x = [170, 2500];
+  f_buildings.push(createFallenBuilding(170, 150));
+  f_buildings.push(createFallenBuilding(2500, 150));
 
   //------------ TREE ------------
 
@@ -104,35 +98,26 @@ function backgroundSetup() {
 
   canyons = [];
 
-  for (let i = 0; i < 3; i++) {
-    canyons.push(
-      createCanyon(
-        random(200 + i * 600, 600 + i * 700),
-        500,
-        random(150 + i * 100, 300 + i * 60)
-      )
-    );
-  }
-
   // ------------ LAMP ------------
   lamps = [];
 
   for (let i = 0; i < 100; i++) {
-    // let lamp = drawLamp(-660 + i * 500, 480);
     lamps.push(createLamp(-660 + i * 500, 480));
   }
 
   //------------ COIN BOARD ------------
+
   board = {
     x: 50,
     y: 50,
   };
 
   // ------------ MOUNTAIN ------------
-  mountain = {
-    x: 1000,
-    y: 500,
-  };
+
+  mountains = [];
+
+  mountains.push(createMountain(100, 500));
+  mountains.push(createMountain(1000, 500));
 
   // ------------ COLLECTABLE ITEM ------------
 
@@ -140,7 +125,32 @@ function backgroundSetup() {
 
   coins = [];
 
-  coins.push(createCoin(random(200, 600), 540, false));
+  // ------- CLOUD
+
+  // clouds = [
+  //   {
+  //     x: random(60, 90),
+  //     y: random(20, 70),
+  //     size: random(40, 60),
+  //   },
+  //   {
+  //     x: random(140, 190),
+  //     y: random(6, 130),
+  //     size: random(60, 80),
+  //   },
+  //   {
+  //     x: random(0, 80),
+  //     y: random(100, 180),
+  //     size: random(70, 90),
+  //   },
+  // ];
+
+  clouds = [];
+
+  clouds.push(createCloud(random(60, 90), random(20, 70), random(40, 60)));
+  clouds.push(createCloud(random(140, 190), random(6, 130), random(60, 80)));
+  clouds.push(createCloud(random(0, 80), random(100, 180), random(70, 90)));
+  clouds.push(createCloud(random(70, 120), random(100, 180), random(70, 90)));
 
   // ------------ Live Board -----------
   heart = [
@@ -176,139 +186,163 @@ function backgroundSetup() {
   };
 }
 
-function movingObject() {
-  //------------ CLOUD ------------
+function Building(x, y, color) {
+  this.x = x;
+  this.y = y;
+  this.color = color;
 
-  //Technique I used From the Coursera which are objects inside of an array
-  clouds = [
-    {
-      x: random(60, 90),
-      y: random(20, 70),
-      size: random(40, 60),
-    },
-    {
-      x: random(140, 190),
-      y: random(6, 130),
-      size: random(60, 80),
-    },
-    {
-      x: random(0, 80),
-      y: random(100, 180),
-      size: random(70, 90),
-    },
-  ];
-}
+  this.draw = function () {
+    // Building Body
+    fill(this.color, 104, 68);
+    rect(this.x, this.y, 500, 500);
 
-function drawBuilding() {
-  // ------------ SPIKY BUILDING ------------
-
-  //Using the loop function learned from Coursera to duplicate buildings and its spike (triangle). Then I developed my own objects such as spiky buildings, lamps, and normal building.
-
-  for (let i = 0; i < building_x.length; i++) {
-    fill(f_building.color + i * 10, 104, 68);
-    rect(building_x[i], building.y, 500, 500);
-
-    //door
+    // Door
     fill(142, 72, 46);
-    rect(building_x[i] + 215, building.y + 280, 70, 100);
+    rect(this.x + 215, this.y + 280, 70, 100);
 
     fill(140);
-    ellipse(building_x[i] + 230, building.y + 320, 10);
+    ellipse(this.x + 230, this.y + 320, 10);
 
-    //window
+    // Windows
     fill(255, 215, 0);
-    rect(building_x[i] + 60, building.y + 170, 60);
-    rect(building_x[i] + 200, building.y + 170, 100, 60);
-    rect(building_x[i] + 380, building.y + 170, 60);
+    rect(this.x + 60, this.y + 170, 60);
+    rect(this.x + 200, this.y + 170, 100, 60);
+    rect(this.x + 380, this.y + 170, 60);
 
-    rect(building_x[i] + 60, building.y + 50, 60);
-    rect(building_x[i] + 200, building.y + 50, 100, 60);
-    rect(building_x[i] + 380, building.y + 50, 60);
+    rect(this.x + 60, this.y + 50, 60);
+    rect(this.x + 200, this.y + 50, 100, 60);
+    rect(this.x + 380, this.y + 50, 60);
 
-    //triangles (spike)
+    // Triangles (spikes on the top)
     for (let j = 0; j < 5; j++) {
-      fill(f_building.color + i * 10, 104, 68);
+      fill(this.color, 104, 68);
       triangle(
-        building_x[i] + 50 + j * 100,
-        building.y - 50,
-        building_x[i] + j * 100,
-        building.y,
-        building_x[i] + 100 + j * 100,
-        building.y
+        this.x + 50 + j * 100,
+        this.y - 50,
+        this.x + j * 100,
+        this.y,
+        this.x + 100 + j * 100,
+        this.y
       );
     }
+  };
+}
+
+function createBuilding(x, y, color) {
+  return new Building(x, y, color);
+}
+
+function drawBuildings() {
+  for (let i = 0; i < buildings.length; i++) {
+    const building = buildings[i];
+    building.draw();
   }
 }
 
-function drawNormalBuilding() {
-  // ------------ NORMAL BUILDING ------------
+function NormalBuilding(x, y) {
+  this.x = x; // X position of the building
+  this.y = y; // Y position of the building
 
-  for (let i = 0; i < n_building_x.length; i++) {
+  // Hardcoded properties for the building
+  this.width = 500; // Hardcoded width of the building
+  this.height = 700; // Hardcoded height of the building
+  this.color = random(0, 255); // Random color for each building
+
+  this.draw = function () {
     push();
-    fill(230, n_building.color + i * 10, 50);
-    rect(n_building_x[i], n_building.y, 500, 700);
+    fill(230, this.color, 50);
+    rect(this.x, this.y, this.width, this.height);
 
-    //door
+    // Door
     fill(142, 72, 46);
-    rect(n_building_x[i] + 215, n_building.y + 380, 70, 100);
+    rect(this.x + this.width / 2 - 35, this.y + 380, 70, 100); // Centered Door
     fill(140);
-    ellipse(n_building_x[i] + 230, n_building.y + 420, 10);
+    ellipse(this.x + this.width / 2, this.y + 420, 10); // Door Knob
 
-    //window
+    // Windows
     fill(255, 215, 0);
-    rect(n_building_x[i] + 60, n_building.y + 290, 60);
-    rect(n_building_x[i] + 200, n_building.y + 290, 100, 60);
-    rect(n_building_x[i] + 380, n_building.y + 290, 60);
+    rect(this.x + 60, this.y + 290, 60);
+    rect(this.x + 200, this.y + 290, 100, 60);
+    rect(this.x + 380, this.y + 290, 60);
 
-    fill(255, 215, 0);
-    rect(n_building_x[i] + 60, n_building.y + 170, 60);
-    rect(n_building_x[i] + 200, n_building.y + 170, 100, 60);
-    rect(n_building_x[i] + 380, n_building.y + 170, 60);
+    rect(this.x + 60, this.y + 170, 60);
+    rect(this.x + 200, this.y + 170, 100, 60);
+    rect(this.x + 380, this.y + 170, 60);
 
-    rect(n_building_x[i] + 60, n_building.y + 50, 60);
-    rect(n_building_x[i] + 200, n_building.y + 50, 100, 60);
-    rect(n_building_x[i] + 380, n_building.y + 50, 60);
+    rect(this.x + 60, this.y + 50, 60);
+    rect(this.x + 200, this.y + 50, 100, 60);
+    rect(this.x + 380, this.y + 50, 60);
+
     pop();
+  };
+}
+
+function createNormalBuilding(x, y) {
+  return new NormalBuilding(x, y);
+}
+
+function drawNormalBuildings() {
+  for (let i = 0; i < n_buildings.length; i++) {
+    const building = n_buildings[i];
+    building.draw();
   }
 }
 
-function drawFallenBuilding() {
-  //------------ FALLEN BUILDING ------------
+function FallenBuilding(x, y) {
+  this.x = x;
+  this.y = y;
 
-  for (let j = 0; j < f_building_x.length; j++) {
-    fill(f_building.color + j * 10, 104, 68);
-    rect(f_building_x[j], f_building.y, 500, 400);
+  // Hardcoded properties for the fallen building
+  this.width = 500;
+  this.height = 400;
+  this.color = random(0, 255);
 
-    //window
-    //first row
+  this.draw = function () {
+    push();
+    fill(this.color, 104, 68);
+    rect(this.x, this.y, this.width, this.height);
+
+    // First row of windows
     for (let i = 0; i < 4; i++) {
       fill(255, 215, 0);
-      rect(f_building_x[j] + 50 + i * 100, f_building.y + 40, 50);
+      rect(this.x + 50 + i * 100, this.y + 40, 50);
     }
 
-    //second row
+    // Second row of windows
     for (let i = 0; i < 4; i++) {
       fill(255, 215, 0);
-      rect(f_building_x[j] + 50 + i * 100, f_building.y + 140, 50, 70);
+      rect(this.x + 50 + i * 100, this.y + 140, 50, 70);
     }
 
-    //third row
+    // Third row of windows
     for (let i = 0; i < 4; i++) {
-      rect(f_building_x[j] + 50 + i * 100, f_building.y + 250, 50);
+      rect(this.x + 50 + i * 100, this.y + 250, 50);
     }
 
-    //triangle spike
+    // Triangle spikes (4 spikes)
     for (let i = 0; i < 4; i++) {
-      fill(f_building.color + j * 10, 104, 68);
+      fill(this.color, 104, 68);
       triangle(
-        f_building_x[j] + 550,
-        f_building.y + 50 + i * 100,
-        f_building_x[j] + 500,
-        f_building.y + i * 100,
-        f_building_x[j] + 500,
-        f_building.y + 100 + i * 100
+        this.x + 550,
+        this.y + 50 + i * 100,
+        this.x + 500,
+        this.y + i * 100,
+        this.x + 500,
+        this.y + 100 + i * 100
       );
     }
+    pop();
+  };
+}
+
+function createFallenBuilding(x, y) {
+  return new FallenBuilding(x, y);
+}
+
+function drawFallenBuildings() {
+  for (let i = 0; i < f_buildings.length; i++) {
+    const building = f_buildings[i];
+    building.draw();
   }
 }
 
@@ -332,47 +366,53 @@ function streetRoad() {
   rect(-2000, 670, 10000, 180);
 }
 
-function drawCloud() {
-  // ------------ CLOUD ------------
+function Cloud(x, y, size) {
+  this.x = x;
+  this.y = y;
+  this.size = size;
+  this.speed = random(2, 5);
 
-  for (let i = 0; i < clouds.length; i++) {
+  // Draw method for rendering the cloud
+  this.draw = function () {
     fill(255);
-
-    let cloud = clouds[i];
-
-    //STRUCTURE
-    ellipse(cloud.x - 10, cloud.y, cloud.size);
-    ellipse(cloud.x + 9, cloud.y + 15, cloud.size + 65, cloud.size + 10);
-
-    ellipse(cloud.x + 25, cloud.y - 1, cloud.size + 15);
-    ellipse(cloud.x - 10, cloud.y + 20, cloud.size);
-    ellipse(cloud.x + 30, cloud.y + 20, cloud.size);
+    // STRUCTURE of cloud
+    ellipse(this.x - 10, this.y, this.size);
+    ellipse(this.x + 9, this.y + 15, this.size + 65, this.size + 10);
+    ellipse(this.x + 25, this.y - 1, this.size + 15);
+    ellipse(this.x - 10, this.y + 20, this.size);
+    ellipse(this.x + 30, this.y + 20, this.size);
 
     push();
     strokeWeight(2);
     stroke(0);
     noFill();
-
-    line(cloud.x - 65, cloud.y + 25, cloud.x - 80, cloud.y + 25);
-    line(cloud.x - 65, cloud.y + 35, cloud.x - 80, cloud.y + 35);
+    line(this.x - 65, this.y + 25, this.x - 80, this.y + 25);
+    line(this.x - 65, this.y + 35, this.x - 80, this.y + 35);
     pop();
-  }
+  };
+
+  // Method to animate the cloud's movement
+  this.move = function () {
+    if (gameState == 1) {
+      this.x += this.speed; // Cloud speed
+    }
+
+    // Cloud loop
+    if (this.x > 1800) {
+      this.x = -100;
+      this.y = random(20, 180); // Reset y to a new random position
+    }
+  };
 }
 
-function drawMovingCloud() {
-  // ------------ CLOUD ANIMATION
+function createCloud(x, y, size) {
+  return new Cloud(x, y, size);
+}
 
+function drawCloud() {
   for (let i = 0; i < clouds.length; i++) {
-    let cloud = clouds[i];
-    if (gameState == 1) {
-      cloud.x += i + 2;
-    }
-
-    //CLOUD LOOP
-    if (cloud.x > 1800) {
-      cloud.x = -100;
-      cloud.y = random(20, 180);
-    }
+    clouds[i].draw();
+    clouds[i].move();
   }
 }
 
@@ -482,7 +522,7 @@ function createTree(x, y) {
   return new Tree(x, y);
 }
 
-function drawTree(x, y) {
+function drawTree() {
   //------------ TREE ------------
   //Using the loop method I learned from Coursera, I looped the trees a lot of times to make it as if there are infinite amount of trees
 
@@ -512,115 +552,140 @@ function drawMoon() {
   pop();
 }
 
+function Mountain(x, y) {
+  this.x = x;
+  this.y = y;
+
+  this.draw = function () {
+    push();
+
+    // Main mountain body (color for the mountain)
+
+    fill(118, 129, 214); // Main mountain color (blue-ish)
+    triangle(
+      this.x + 250, // Left peak x
+      this.y, // Base y
+      this.x + 650, // Right base x
+      this.y, // Base y
+      this.x + 450, // Center top x
+      this.y - 350 // Top peak y
+    );
+
+    // Snowy cap on the left side (color for snow)
+    fill(255); // Snow color (white)
+    triangle(
+      this.x + 420, // Left cap x
+      this.y - 300, // Cap y
+      this.x + 480, // Right cap x
+      this.y - 300, // Cap y
+      this.x + 450, // Center cap x
+      this.y - 350 // Cap y
+    );
+
+    // Right side of the mountain (color for the mountain)
+    fill(118, 129, 214); // Main mountain color (blue-ish)
+    triangle(
+      this.x - 150, // Left base x
+      this.y, // Base y
+      this.x + 180, // Right base x
+      this.y, // Base y
+      this.x + 40, // Center right peak x
+      this.y - 350 // Peak y
+    );
+
+    // Snowy cap on the right side (color for snow)
+    fill(255); // Snow color (white)
+    triangle(
+      this.x + 13, // Left cap x
+      this.y - 300, // Cap y
+      this.x + 60, // Right cap x
+      this.y - 300, // Cap y
+      this.x + 40, // Center cap x
+      this.y - 350 // Cap y
+    );
+
+    // Main body of the mountain (color for the mountain)
+    fill(118, 129, 214); // Main mountain color (blue-ish)
+    triangle(
+      this.x, // Left base x
+      this.y, // Base y
+      this.x + 600, // Right base x
+      this.y, // Base y
+      this.x + 300, // Peak x
+      this.y - 450 // Peak y
+    );
+
+    // Snowy peak (color for snow)
+    fill(255); // Snow color (white)
+    triangle(
+      this.x + 247, // Left cap x
+      this.y - 370, // Cap y
+      this.x + 352, // Right cap x
+      this.y - 370, // Cap y
+      this.x + 300, // Center peak x
+      this.y - 450 // Peak y
+    );
+
+    pop();
+  };
+}
+
+function createMountain(x, y) {
+  return new Mountain(x, y);
+}
+
 function drawMountain() {
-  // ------------ MOUNTAIN ------------
-
-  // I made the mountain to be the background which stays static if the screen side scrolls to the left of the right
-
-  push();
-  stroke(0);
-  fill(118, 129, 214);
-  triangle(
-    mountain.x + 250,
-    mountain.y,
-    mountain.x + 650,
-    mountain.y,
-    mountain.x + 450,
-    mountain.y - 350
-  );
-  fill(255);
-  triangle(
-    mountain.x + 420,
-    mountain.y - 300,
-    mountain.x + 480,
-    mountain.y - 300,
-    mountain.x + 450,
-    mountain.y - 350
-  );
-  pop();
-
-  push();
-  stroke(0);
-  fill(118, 129, 214);
-  triangle(
-    mountain.x - 150,
-    mountain.y,
-    mountain.x + 180,
-    mountain.y,
-    mountain.x + 40,
-    mountain.y - 350
-  );
-  fill(255);
-  triangle(
-    mountain.x + 13,
-    mountain.y - 300,
-    mountain.x + 60,
-    mountain.y - 300,
-    mountain.x + 40,
-    mountain.y - 350
-  );
-  pop();
-
-  push();
-  fill(118, 129, 214);
-  triangle(
-    mountain.x,
-    mountain.y,
-    mountain.x + 600,
-    mountain.y,
-    mountain.x + 300,
-    mountain.y - 450
-  );
-  fill(255);
-  triangle(
-    mountain.x + 247,
-    mountain.y - 370,
-    mountain.x + 352,
-    mountain.y - 370,
-    mountain.x + 300,
-    mountain.y - 450
-  );
-  pop();
+  for (let i = 0; i < mountains.length; i++) {
+    const mountain = mountains[i];
+    mountain.draw();
+  }
 }
 
 function Lamp(x, y) {
-  this.x = x;
+  this.x = x; // Center of the lamp base
   this.y = y;
+
   this.draw = function () {
     push();
     fill(35);
 
+    // Adjusting offsets to center the lamp on this.x
     beginShape();
-    vertex(this.x, this.y);
-    vertex(this.x + 5, this.y - 25);
-    vertex(this.x + 30, this.y - 25);
-    vertex(this.x + 35, this.y);
+    vertex(this.x - 15, this.y); // Left base
+    vertex(this.x - 10, this.y - 25);
+    vertex(this.x + 10, this.y - 25);
+    vertex(this.x + 15, this.y); // Right base
     endShape();
 
-    rect(this.x + 12, this.y - 100, 10, 80);
-    rect(this.x + 2, this.y - 100, 30, 5);
-    rect(this.x - 3, this.y - 103, 40, 5);
+    // Pole
+    rect(this.x - 5, this.y - 100, 10, 80);
 
+    // Upper supports
+    rect(this.x - 13, this.y - 100, 26, 5);
+    rect(this.x - 18, this.y - 103, 36, 5);
+
+    // Top shape
     beginShape();
-    vertex(this.x + 5, this.y - 103);
-    vertex(this.x + 3, this.y - 130);
-    vertex(this.x + 33, this.y - 130);
-    vertex(this.x + 29, this.y - 103);
+    vertex(this.x - 11, this.y - 103);
+    vertex(this.x - 13, this.y - 130);
+    vertex(this.x + 13, this.y - 130);
+    vertex(this.x + 11, this.y - 103);
     endShape();
 
-    //lamp
+    // Lamp light
     fill(255, 215, 0);
     beginShape();
+    vertex(this.x - 8, this.y - 125);
     vertex(this.x + 8, this.y - 125);
-    vertex(this.x + 27, this.y - 125);
-    vertex(this.x + 25, this.y - 108);
-    vertex(this.x + 10, this.y - 108);
+    vertex(this.x + 7, this.y - 108);
+    vertex(this.x - 7, this.y - 108);
     endShape();
 
+    // Top cap
     fill(35);
-    rect(this.x - 3, this.y - 130, 40, 5);
-    rect(this.x + 2, this.y - 133, 30, 5);
-    ellipse(this.x + 16, this.y - 134, 10);
+    rect(this.x - 18, this.y - 130, 36, 5);
+    rect(this.x - 13, this.y - 133, 26, 5);
+    ellipse(this.x, this.y - 134, 10);
 
     pop();
   };
@@ -630,14 +695,9 @@ function createLamp(x, y) {
   return new Lamp(x, y);
 }
 
-function drawLamp(x, y) {
-  // ------------ LAMP ------------
-  //I made the lamp by myself with a lamp reference from google -> https://www.shutterstock.com/search/street-lamp-drawing
-  //Same like the tree, I duplicated a lot of times
-
+function drawLamp() {
   for (let i = 0; i < lamps.length; i++) {
-    const lamp = lamps[i];
-    lamp.draw();
+    lamps[i].draw();
   }
 }
 
@@ -710,11 +770,11 @@ function Canyon(x, y, width) {
   };
 
   this.func = function () {
-    //CANYON FALLING
+    //CANYON FALLING (use +40, -30 because there are spikes )
     if (
       police_world >= this.x + 40 &&
       police_world <= this.x + this.width - 30 &&
-      police.position.y >= this.y + 50
+      police.position.y >= this.y
     ) {
       baseLine = 900;
       isJump = false; // cannot jump
@@ -734,14 +794,13 @@ function Canyon(x, y, width) {
 
   this.lavaMove = function () {
     if (gameState == 1) {
-      this.lx += 0.5;
+      this.lx += 0.5; //lava ball moving
+
+      if (this.lx > this.x + this.width - 90) {
+        this.lx = this.x + 40; //
+      }
     }
-    if (gameState == 1) {
-      this.lx += 0.5;
-    }
-    if (this.lx > this.x + this.width - 90) {
-      this.lx = this.x + 40;
-    }
+
     if (gameState == 0) {
       this.lx = this.x + 50;
     }
@@ -768,8 +827,6 @@ function drawLava() {
   }
 }
 
-// ------------ COLLECTABLE ------------
-
 function Coin(x, y, collect) {
   this.x = x;
   this.y = y;
@@ -788,7 +845,7 @@ function Coin(x, y, collect) {
       ellipse(this.x, this.currentY, 35);
 
       fill(255, 215, 0);
-      ellipse(this.x, this.currentY, 35 - 10);
+      ellipse(this.x, this.currentY, 25);
 
       strokeWeight(2);
 
@@ -807,9 +864,9 @@ function Coin(x, y, collect) {
     //COIN COLLECT & SCORE
 
     if (this.collect == false) {
-      let d = dist(police_world, police.position.y, this.x, this.currentY + 10);
+      let d = dist(police_world, police.position.y, this.x, this.currentY);
 
-      if (d < 38) {
+      if (d < 40) {
         this.collect = true; // coin becomes invisible
         scoreBoard += 1;
         coinSound.play();
@@ -818,7 +875,7 @@ function Coin(x, y, collect) {
   };
 
   //COIN RESET
-  if (gameState == 0) {
+  if (gameState == 1) {
     this.collect = false; //the coin can be seen
   }
 
@@ -859,7 +916,19 @@ function drawScoreBoard() {
   rect(board.x, board.y, 145, 70);
   fill(255);
   textSize(20);
-  text("Score =    " + scoreBoard, board.x + 20, board.y + 40);
+  text("Score =   " + scoreBoard, board.x + 20, board.y + 40);
+  pop();
+}
+
+function drawLevel() {
+  push();
+  stroke(0);
+  strokeWeight(2);
+  fill(100, 149, 237);
+  rect(50, 150, 145, 70);
+  fill(255);
+  textSize(20);
+  text("Level =   " + level, 75, 190);
   pop();
 }
 
@@ -973,33 +1042,35 @@ function drawFlag() {
     pop();
   }
 
-  let d = abs(police_world - flag.x); // distance between characters & flag
+  if (gameState == 1) {
+    let d = abs(police_world - flag.x); // distance between characters & flag
 
-  if (d < 10) {
-    if (flag.y >= 560 && flag.y <= 800 && flag.isReach == false) {
-      flag.y += 1;
-    } //if character is within the distance, it will move the flag down
+    if (d < 10) {
+      if (flag.y >= 560 && flag.y <= 800 && flag.isReach == false) {
+        flag.y += 1;
+      } //if character is within the distance, it will move the flag down
 
-    if (flag.y >= 800) {
-      flag.isReach = true; // turn the flag into police flag
-    }
-
-    if (flag.isReach == true && flag.y < 1000 && flag.y >= 560) {
-      flag.y -= 1; //move the police flag up
-      if (flag.y <= 560) {
-        gameState = 4; // win the game
-        gameWinSound.play();
+      if (flag.y >= 800) {
+        flag.isReach = true; // turn the flag into police flag
       }
-    }
-  } else {
-    flag.isReach = false; // turn into prisoner flag
-    flag.y -= 1; //move it up
-    if (flag.y <= 560) {
-      flag.y += 1;
-    }
 
-    if (flag.isReach && flag.y >= 560 && flag.y <= 800) {
-      flag.y += 1; //if its police flag, then it will go down
+      if (flag.isReach == true && flag.y < 1000 && flag.y >= 560) {
+        flag.y -= 1; //move the police flag up
+        if (flag.y <= 560) {
+          gameState = 5; // next level
+          gameWinSound.play();
+        }
+      }
+    } else {
+      flag.isReach = false; // turn into prisoner flag
+      flag.y -= 1; //move it up
+      if (flag.y <= 560) {
+        flag.y += 1;
+      }
+
+      if (flag.isReach && flag.y >= 560 && flag.y <= 800) {
+        flag.y += 1; //if its police flag, then it will go down
+      }
     }
   }
 }
@@ -1023,7 +1094,7 @@ function Platform(x, y, length) {
       p_x > this.x - 10 &&
       p_x < this.x + this.length + 10 &&
       p_y >= this.y - 12 &&
-      p_y <= this.y + 10
+      p_y <= this.y + 5
     ) {
       return true; // Character is on this platform
     }
@@ -1098,7 +1169,7 @@ function Enemies(x, y, range) {
 
   this.checkContact = function (p_x, p_y) {
     let d = dist(p_x, p_y, this.currentX, this.y);
-    if (d < 20) {
+    if (d < 30) {
       return true;
     } else {
       return false;
@@ -1119,14 +1190,28 @@ function drawEnemies() {
     let isContact = enemy.checkContact(police_world, police.position.y);
 
     if (isContact) {
-      if (lives > 0) {
-        initialSetup();
-        gameState = 1;
+      if (difficulty == "easy") {
+        if (lives > 0) {
+          initialSetup();
+          scoreBoard = 0;
+          gameState = 1;
+          lives--;
+          gameOver = true;
+
+          //DEATH SOUND
+          deathSound.play();
+        }
+        //if difficulty is medium then will restart
+      } else if ((difficulty = "medium")) {
+        level = 1;
         lives--;
+        initialSetup();
+        deathSound.play();
       }
 
       if (lives < 1) {
         gameState = 6; // if live is zero then the game is over
+        gameOver = true;
       }
     }
   }

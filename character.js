@@ -234,9 +234,9 @@ function characterJumpOrFall() {
   );
   pop();
   fill(216, 191, 216);
-  ellipse(police.position.x, police.position.y - 27, gameChar_w - 5);
-  ellipse(police.position.x, police.position.y - 16, gameChar_w - 5);
-  ellipse(police.position.x, police.position.y - 5, gameChar_w - 5);
+  ellipse(police.position.x, police.position.y - 27, 5);
+  ellipse(police.position.x, police.position.y - 16, 5);
+  ellipse(police.position.x, police.position.y - 5, 5);
 
   //hand
 
