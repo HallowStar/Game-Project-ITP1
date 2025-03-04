@@ -39,6 +39,7 @@ let flag;
 let pole;
 let lamps;
 let board;
+let levelBoard;
 let canyons;
 let coins;
 let mountains;
@@ -89,9 +90,9 @@ function preload() {
 function setup() {
   createCanvas(1700, 850);
 
-  difficulty = "easy";
+  difficulty = "easy"; // set the default difficulty easy
 
-  infinite = false;
+  infinite = false; // set the infinite mode in settings to false
 
   scoreBoard = 0;
 
