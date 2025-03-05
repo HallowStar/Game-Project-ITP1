@@ -58,7 +58,7 @@ function levelThree() {
   platforms.push(createPlatform(250, 330, 200, 0, false));
   platforms.push(createPlatform(580, 180, 200, 3, true));
   platforms.push(createPlatform(1330, 430, 70, 2, true));
-  platforms.push(createPlatform(1900, 430, 80, 0, false));
+  platforms.push(createPlatform(1900, 430, 130, 0, false));
 
   //CANYON
   canyons.push(createCanyon(650, 500, 400));
@@ -75,7 +75,7 @@ function levelThree() {
   enemies.push(createEnemies(470, 560, 200, "gray"));
   enemies.push(createEnemies(300, 315, 130, "blue"));
   enemies.push(createEnemies(1100, 560, 50, "red"));
-  enemies.push(createEnemies(1900, 415, 50, "red"));
+  enemies.push(createEnemies(1950, 415, 80, "red"));
 
   //FLAG
   flags.push(createFlag(2500, 560));
@@ -98,7 +98,7 @@ function levelFour() {
   //ENEMIES
   enemies.push(createEnemies(490, 315, 100, "blue"));
   enemies.push(createEnemies(1030, 355, 50, "red"));
-  enemies.push(createEnemies(1550, 415, 50, "blue"));
+  enemies.push(createEnemies(1550, 415, 50, "red"));
   enemies.push(createEnemies(1800, 540, 200, "gray"));
 
   //COINS
